@@ -184,6 +184,13 @@ prepared (not executed — no cloud credentials available in this
 environment) deployment steps. **PROTOTYPE VALIDATED — NOT PRODUCTION
 READY** — see [`docs/deployment_validation_report.md`](docs/deployment_validation_report.md).
 
+The current open question is *product fit*, not more infrastructure —
+see [`docs/pilot_readiness_report.md`](docs/pilot_readiness_report.md)
+for the pilot go/no-go and [`docs/pilot_execution_plan.md`](docs/pilot_execution_plan.md)
+for the pilot itself (hypotheses, baseline, metrics, a runnable scenario
+dataset at [`evaluation/pilot_dataset/`](evaluation/pilot_dataset/), and
+a decision framework).
+
 ## 7. Governance model
 
 Every Context Package carries a `policy_decision` block (`allowed_domains`,
@@ -344,11 +351,21 @@ docs/test_report.md                     comprehensive adversarial validation pas
 docs/deployment.md                      local/Docker/deployment instructions
 docs/deployment_validation_report.md    Docker + deployment-readiness findings
 docs/pilot_plan.md                      controlled pilot plan (synthetic/representative data only)
+docs/pilot_execution_plan.md            pilot hypotheses, scope, measurement gaps (extends pilot_plan.md)
+docs/pilot_baseline.md                  current-state measurements — real numbers or "TO BE MEASURED DURING PILOT"
+docs/pilot_metrics.md                   product/quality/governance/operational metrics — measured-now vs. pilot-only
+docs/pilot_feedback_questions.md        stakeholder question sets (platform/business/governance)
+docs/pilot_workflow.md                  the ~30-60 min pilot session structure
+docs/pilot_decision_framework.md        GO / ITERATE / STOP-PIVOT criteria
+docs/roadmap.md                         NOW/NEXT/LATER, contingent on pilot evidence
+docs/pilot_readiness_report.md          is the prototype actually ready to run the pilot?
+evaluation/pilot_dataset/       pilot scenario dataset (normal/edge/adversarial) — evaluation-only, not wired into the runtime
 evaluation_reports/  JSON/Markdown reports (git-ignored except the checked-in manual pass and test_report.json)
 Dockerfile, .dockerignore, .env.example  containerization + config (see docs/deployment.md)
 scripts/e2e_demo.py            the killer demo: agent -> policy -> context -> LLM -> grounded response
 scripts/demo.py                the narrower week-6 demo
 scripts/campaign_workflow.py   GraphRAG-driven brand-manager campaign workflow
+scripts/run_pilot_scenarios.py runs evaluation/pilot_dataset/ live against the Context Layer for a pilot session
 tests/             firewall, policy, scope-isolation, action-tool, GraphRAG, LLM/grounding, HTTP API,
                     adversarial, privilege-escalation, and campaign tests
 tests/evaluation/  the evaluation layer's own test suite

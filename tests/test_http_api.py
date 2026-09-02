@@ -19,6 +19,14 @@ def client():
         yield c
 
 
+def test_landing_page_links_to_the_primary_demo_and_docs(client):
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+    assert "/demo/compare/HCP-021" in response.text
+    assert "/docs" in response.text
+
+
 def test_health(client):
     response = client.get("/health")
     assert response.status_code == 200

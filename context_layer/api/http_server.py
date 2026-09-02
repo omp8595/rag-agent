@@ -21,7 +21,7 @@ import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel, ConfigDict
 
 from context_layer.agent_builder.agent import ThinAgent
@@ -117,6 +117,37 @@ def _enrich_log(request: Request, *, agent_id: str | None = None, package: dict 
 
 
 # -- endpoints ----------------------------------------------------------------
+
+
+_LANDING_PAGE_HTML = """<!doctype html>
+<html><head><title>Life Sciences Enterprise Context Layer — Demo</title>
+<style>body{font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;line-height:1.5;color:#222}
+code{background:#f0f0f0;padding:0.1rem 0.3rem;border-radius:3px}
+li{margin-bottom:0.4rem}a{color:#0a5}</style></head>
+<body>
+<h1>Life Sciences Enterprise Context Layer</h1>
+<p><strong>PROTOTYPE VALIDATED — NOT PRODUCTION READY.</strong>
+See <a href="https://github.com/omp8595/rag-agent/blob/main/docs/pilot_readiness_report.md">docs/pilot_readiness_report.md</a>.</p>
+<p>This is the demo HTTP API — a thin wrapper over the same governed
+Context Layer the MCP server uses. The primary thing to look at:</p>
+<ul>
+<li><a href="/demo/compare/HCP-021">/demo/compare/HCP-021</a> — the killer demo: same HCP, two agents, two purposes, two different governed Context Packages, computed live</li>
+<li><a href="/docs">/docs</a> — interactive API documentation (Swagger UI, auto-generated) — try any endpoint from the browser</li>
+<li><a href="/demo/commercial">/demo/commercial</a> — HCP Engagement Agent (commercial_engagement)</li>
+<li><a href="/demo/clinical">/demo/clinical</a> — Site Selection Agent (site_selection)</li>
+<li><a href="/health">/health</a> / <a href="/ready">/ready</a> — liveness / readiness</li>
+</ul>
+<p><code>POST /context</code> accepts <code>{"agent_id", "entity_id", "question"}</code> —
+a <code>"purpose"</code> field is rejected with <code>422</code>, on purpose: purpose is
+bound to the published agent, never a request parameter.</p>
+<p>See <code>docs/deployment.md</code> for local/Docker instructions, and
+<code>evaluation/pilot_dataset/</code> for the scenario set a pilot session runs.</p>
+</body></html>"""
+
+
+@app.get("/", response_class=HTMLResponse)
+def landing_page() -> str:
+    return _LANDING_PAGE_HTML
 
 
 @app.get("/health")
