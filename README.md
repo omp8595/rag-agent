@@ -231,6 +231,20 @@ package — fixed, with a regression test.
 | domains | one flat index | partitioned subgraphs, crossed only by a whitelisted bridge |
 | LLM's view | raw retrieved chunks | a `dict` Context Package only — no reference to the data store |
 
+### Validation
+
+[`docs/test_report.md`](docs/test_report.md) is a comprehensive,
+adversarial test pass against this codebase — not just "tests pass," but
+an independently re-verified run of the primary acceptance scenario,
+explicit attack attempts (graph path attack, vector leakage, prompt
+injection, runtime privilege escalation), and an explicit governance-gating
+proof (excellent RAGAS/DeepEval/LLM-Judge scores still `FAIL` when a
+policy or bridge violation is present). It found and fixed one real
+critical defect: `AgentConfig` was a mutable pydantic model, so a
+published agent's purpose and roles could be reassigned at runtime with
+no exception — see the report for the fix and its regression tests
+(`tests/test_privilege_escalation.py`).
+
 ## 9. Prototype vs. production
 
 Full detail in [`docs/production_reference_architecture.md`](docs/production_reference_architecture.md).

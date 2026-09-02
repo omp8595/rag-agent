@@ -1,0 +1,150 @@
+{
+  "product": "Life Sciences Enterprise Context Layer",
+  "report_type": "comprehensive_test_report",
+  "date": "2026-09-02",
+  "baseline_commit": "c21dd6d",
+  "baseline": {
+    "tests_run": 87,
+    "passed": 87,
+    "failed": 0,
+    "skipped": 0,
+    "errors": 0
+  },
+  "final": {
+    "tests_run": 108,
+    "passed": 108,
+    "failed": 0,
+    "skipped": 0,
+    "errors": 0
+  },
+  "core_components": {
+    "policy_engine": "PASS",
+    "agent_builder": "PASS_AFTER_FIX",
+    "graph_partitioning": "PASS",
+    "bridge_firewall": "PASS",
+    "entity_retrieval": "PASS",
+    "vector_retrieval": "PASS",
+    "context_assembly": "PASS"
+  },
+  "primary_acceptance_test": {
+    "entity_id": "HCP-021",
+    "same_entity": true,
+    "same_base_data": true,
+    "different_agent": true,
+    "different_purpose": true,
+    "different_policy_decision": true,
+    "different_allowed_domains": true,
+    "different_retrieved_facts": true,
+    "different_context_package": true,
+    "commercial_facts_in_clinical_package": 0,
+    "commercial_facts_in_clinical_package_total": 1,
+    "clinical_facts_in_commercial_package": 0,
+    "clinical_facts_in_commercial_package_total": 4,
+    "unauthorized_bridge_traversal": 0,
+    "result": "PASS"
+  },
+  "security_testing": {
+    "unknown_purpose_fail_closed": "PASS",
+    "purpose_escalation": "PASS_AFTER_FIX",
+    "forbidden_domain_access_commercial_to_clinical": "PASS",
+    "forbidden_domain_access_clinical_to_commercial": "PASS",
+    "graph_path_attack": "PASS",
+    "vector_retrieval_leakage": "PASS",
+    "prompt_injection_resistance": "PASS_AFTER_TEST_CORRECTION"
+  },
+  "lineage": {
+    "sample_size_hcps": 15,
+    "total_facts": 54,
+    "facts_with_lineage": 54,
+    "orphan_facts": 0,
+    "lineage_coverage": 1.0
+  },
+  "ai_evaluation": {
+    "ragas": {
+      "status": "SKIPPED",
+      "reason": "ragas 0.4.3 fails to import in this environment - upstream langchain-community incompatibility, documented in docs/evaluation.md"
+    },
+    "deepeval": {
+      "status": "SKIPPED",
+      "reason": "no ANTHROPIC_API_KEY/OPENAI_API_KEY configured; adapter construction and resilience independently verified"
+    },
+    "llm_judge": {
+      "status": "SKIPPED",
+      "reason": "no LLM credentials configured; parsing and gating logic verified with a mocked model response"
+    },
+    "deterministic_governance": {
+      "status": "PASS",
+      "cases_passed": 6,
+      "cases_total": 6
+    },
+    "governance_gating_scenarios": {
+      "excellent_scores_clean_governance": "PASS",
+      "excellent_scores_unauthorized_domain": "FAIL_AS_EXPECTED",
+      "perfect_answer_unauthorized_bridge": "FAIL_AS_EXPECTED",
+      "excellent_scores_judge_flags_critical_violation": "FAIL_AS_EXPECTED"
+    }
+  },
+  "performance_ms": {
+    "policy_evaluation": {
+      "mean": 0.0047,
+      "median": 0.0032,
+      "max": 0.0389
+    },
+    "entity_lookup_raw_node": {
+      "mean": 0.0013,
+      "median": 0.0007,
+      "max": 0.0794
+    },
+    "entity_profile_lookup": {
+      "mean": 0.0111,
+      "median": 0.008,
+      "max": 0.1074
+    },
+    "graph_traversal": {
+      "mean": 0.0527,
+      "median": 0.0408,
+      "max": 0.1389
+    },
+    "vector_retrieval": {
+      "mean": 1.6349,
+      "median": 1.6218,
+      "max": 2.7518
+    },
+    "full_context_assembly": {
+      "mean": 2.1576,
+      "median": 2.1243,
+      "max": 3.6137
+    },
+    "end_to_end_mock_llm": {
+      "mean": 2.0301,
+      "median": 1.9798,
+      "max": 3.3572,
+      "n": 50
+    },
+    "cold_graph_build": {
+      "value": 2.7
+    }
+  },
+  "critical_defects": [
+    {
+      "id": 1,
+      "title": "AgentConfig/Guardrails were mutable pydantic models, enabling runtime privilege escalation",
+      "severity": "CRITICAL",
+      "status": "FIXED",
+      "fix": "context_layer/agent_builder/schema.py: model_config = ConfigDict(frozen=True) on both models; list[str] fields changed to tuple[str, ...] (frozen alone does not block in-place mutation of a still-mutable list field)",
+      "regression_tests": "tests/test_privilege_escalation.py"
+    }
+  ],
+  "non_critical_findings": [
+    {
+      "title": "Adversarial prompt-injection test initially asserted on a substring that matched the echoed question text, not actual data disclosure",
+      "resolution": "Test assertion corrected to check for the real leak signal; no product code changed"
+    }
+  ],
+  "final_verdict": {
+    "production_status": "PROTOTYPE_VALIDATED_NOT_PRODUCTION_READY",
+    "primary_acceptance_test_result": "PASS",
+    "governance_test_result": "PASS",
+    "evaluation_framework_result": "DETERMINISTIC_PASS_LLM_METRICS_SKIPPED_NOT_PASSED"
+  }
+}
