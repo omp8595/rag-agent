@@ -1,0 +1,528 @@
+[
+  {
+    "id": "PUB-001",
+    "title": "Heart failure with preserved ejection fraction: a multicenter analysis (2025)",
+    "author_hcp_ids": [
+      "HCP-043"
+    ],
+    "topic": "Heart failure with preserved ejection fraction",
+    "mesh_code": "MeSH:D064894",
+    "journal": "Circulation",
+    "date": "2025-05-01",
+    "abstract": "This multicenter study evaluates heart failure with preserved ejection fraction outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-002",
+    "title": "HER2-low breast cancer: a multicenter analysis (2026)",
+    "author_hcp_ids": [
+      "HCP-044",
+      "HCP-050",
+      "HCP-048"
+    ],
+    "topic": "HER2-low breast cancer",
+    "mesh_code": "MeSH:D000071243",
+    "journal": "NEJM",
+    "date": "2026-10-01",
+    "abstract": "This multicenter study evaluates her2-low breast cancer outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-003",
+    "title": "Multiple sclerosis relapse prevention: a multicenter analysis (2024)",
+    "author_hcp_ids": [
+      "HCP-019",
+      "HCP-050"
+    ],
+    "topic": "Multiple sclerosis relapse prevention",
+    "mesh_code": "MeSH:D009103",
+    "journal": "Lancet Oncology",
+    "date": "2024-10-01",
+    "abstract": "This multicenter study evaluates multiple sclerosis relapse prevention outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-004",
+    "title": "Heart failure with preserved ejection fraction: a multicenter analysis (2025)",
+    "author_hcp_ids": [
+      "HCP-041"
+    ],
+    "topic": "Heart failure with preserved ejection fraction",
+    "mesh_code": "MeSH:D064894",
+    "journal": "Lancet Oncology",
+    "date": "2025-10-01",
+    "abstract": "This multicenter study evaluates heart failure with preserved ejection fraction outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-005",
+    "title": "Heart failure with preserved ejection fraction: a multicenter analysis (2026)",
+    "author_hcp_ids": [
+      "HCP-049",
+      "HCP-047",
+      "HCP-050"
+    ],
+    "topic": "Heart failure with preserved ejection fraction",
+    "mesh_code": "MeSH:D064894",
+    "journal": "Lancet Oncology",
+    "date": "2026-11-01",
+    "abstract": "This multicenter study evaluates heart failure with preserved ejection fraction outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-006",
+    "title": "HER2-low breast cancer: a multicenter analysis (2024)",
+    "author_hcp_ids": [
+      "HCP-042",
+      "HCP-003",
+      "HCP-020"
+    ],
+    "topic": "HER2-low breast cancer",
+    "mesh_code": "MeSH:D000071243",
+    "journal": "Circulation",
+    "date": "2024-01-01",
+    "abstract": "This multicenter study evaluates her2-low breast cancer outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-007",
+    "title": "Rheumatoid arthritis biologics: a multicenter analysis (2025)",
+    "author_hcp_ids": [
+      "HCP-047",
+      "HCP-009"
+    ],
+    "topic": "Rheumatoid arthritis biologics",
+    "mesh_code": "MeSH:D001172",
+    "journal": "NEJM",
+    "date": "2025-05-01",
+    "abstract": "This multicenter study evaluates rheumatoid arthritis biologics outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-008",
+    "title": "Heart failure with preserved ejection fraction: a multicenter analysis (2026)",
+    "author_hcp_ids": [
+      "HCP-027",
+      "HCP-012",
+      "HCP-013"
+    ],
+    "topic": "Heart failure with preserved ejection fraction",
+    "mesh_code": "MeSH:D064894",
+    "journal": "Lancet Oncology",
+    "date": "2026-09-01",
+    "abstract": "This multicenter study evaluates heart failure with preserved ejection fraction outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-009",
+    "title": "Heart failure with preserved ejection fraction: a multicenter analysis (2024)",
+    "author_hcp_ids": [
+      "HCP-033",
+      "HCP-018",
+      "HCP-011"
+    ],
+    "topic": "Heart failure with preserved ejection fraction",
+    "mesh_code": "MeSH:D064894",
+    "journal": "JAMA",
+    "date": "2024-08-01",
+    "abstract": "This multicenter study evaluates heart failure with preserved ejection fraction outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-010",
+    "title": "Heart failure with preserved ejection fraction: a multicenter analysis (2025)",
+    "author_hcp_ids": [
+      "HCP-022",
+      "HCP-008",
+      "HCP-030"
+    ],
+    "topic": "Heart failure with preserved ejection fraction",
+    "mesh_code": "MeSH:D064894",
+    "journal": "NEJM",
+    "date": "2025-03-01",
+    "abstract": "This multicenter study evaluates heart failure with preserved ejection fraction outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-011",
+    "title": "Biomarker testing: a multicenter analysis (2026)",
+    "author_hcp_ids": [
+      "HCP-047",
+      "HCP-044",
+      "HCP-026"
+    ],
+    "topic": "Biomarker testing",
+    "mesh_code": "MeSH:D014408",
+    "journal": "Annals of Rheumatic Diseases",
+    "date": "2026-06-01",
+    "abstract": "This multicenter study evaluates biomarker testing outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-012",
+    "title": "HER2-low breast cancer: a multicenter analysis (2024)",
+    "author_hcp_ids": [
+      "HCP-001",
+      "HCP-017"
+    ],
+    "topic": "HER2-low breast cancer",
+    "mesh_code": "MeSH:D000071243",
+    "journal": "Annals of Rheumatic Diseases",
+    "date": "2024-02-01",
+    "abstract": "This multicenter study evaluates her2-low breast cancer outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-013",
+    "title": "Type 2 diabetes management: a multicenter analysis (2025)",
+    "author_hcp_ids": [
+      "HCP-044",
+      "HCP-048"
+    ],
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "journal": "JAMA",
+    "date": "2025-10-01",
+    "abstract": "This multicenter study evaluates type 2 diabetes management outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-014",
+    "title": "Type 2 diabetes management: a multicenter analysis (2026)",
+    "author_hcp_ids": [
+      "HCP-024",
+      "HCP-007",
+      "HCP-044"
+    ],
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "journal": "Lancet Oncology",
+    "date": "2026-08-01",
+    "abstract": "This multicenter study evaluates type 2 diabetes management outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-015",
+    "title": "HER2-low breast cancer: a multicenter analysis (2024)",
+    "author_hcp_ids": [
+      "HCP-036",
+      "HCP-021",
+      "HCP-040"
+    ],
+    "topic": "HER2-low breast cancer",
+    "mesh_code": "MeSH:D000071243",
+    "journal": "Lancet Oncology",
+    "date": "2024-11-01",
+    "abstract": "This multicenter study evaluates her2-low breast cancer outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-016",
+    "title": "HER2-low breast cancer: a multicenter analysis (2025)",
+    "author_hcp_ids": [
+      "HCP-030",
+      "HCP-045",
+      "HCP-020"
+    ],
+    "topic": "HER2-low breast cancer",
+    "mesh_code": "MeSH:D000071243",
+    "journal": "Circulation",
+    "date": "2025-02-01",
+    "abstract": "This multicenter study evaluates her2-low breast cancer outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-017",
+    "title": "Biomarker testing: a multicenter analysis (2026)",
+    "author_hcp_ids": [
+      "HCP-003"
+    ],
+    "topic": "Biomarker testing",
+    "mesh_code": "MeSH:D014408",
+    "journal": "JAMA",
+    "date": "2026-08-01",
+    "abstract": "This multicenter study evaluates biomarker testing outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-018",
+    "title": "HER2-low breast cancer: a multicenter analysis (2024)",
+    "author_hcp_ids": [
+      "HCP-016"
+    ],
+    "topic": "HER2-low breast cancer",
+    "mesh_code": "MeSH:D000071243",
+    "journal": "Annals of Rheumatic Diseases",
+    "date": "2024-03-01",
+    "abstract": "This multicenter study evaluates her2-low breast cancer outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-019",
+    "title": "Type 2 diabetes management: a multicenter analysis (2025)",
+    "author_hcp_ids": [
+      "HCP-024",
+      "HCP-043"
+    ],
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "journal": "Annals of Rheumatic Diseases",
+    "date": "2025-07-01",
+    "abstract": "This multicenter study evaluates type 2 diabetes management outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-020",
+    "title": "Rheumatoid arthritis biologics: a multicenter analysis (2026)",
+    "author_hcp_ids": [
+      "HCP-047",
+      "HCP-010",
+      "HCP-027"
+    ],
+    "topic": "Rheumatoid arthritis biologics",
+    "mesh_code": "MeSH:D001172",
+    "journal": "NEJM",
+    "date": "2026-08-01",
+    "abstract": "This multicenter study evaluates rheumatoid arthritis biologics outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-021",
+    "title": "Rheumatoid arthritis biologics: a multicenter analysis (2024)",
+    "author_hcp_ids": [
+      "HCP-018",
+      "HCP-003"
+    ],
+    "topic": "Rheumatoid arthritis biologics",
+    "mesh_code": "MeSH:D001172",
+    "journal": "JAMA",
+    "date": "2024-04-01",
+    "abstract": "This multicenter study evaluates rheumatoid arthritis biologics outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-022",
+    "title": "Type 2 diabetes management: a multicenter analysis (2025)",
+    "author_hcp_ids": [
+      "HCP-016",
+      "HCP-024"
+    ],
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "journal": "NEJM",
+    "date": "2025-11-01",
+    "abstract": "This multicenter study evaluates type 2 diabetes management outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-023",
+    "title": "Heart failure with preserved ejection fraction: a multicenter analysis (2026)",
+    "author_hcp_ids": [
+      "HCP-042",
+      "HCP-023",
+      "HCP-004"
+    ],
+    "topic": "Heart failure with preserved ejection fraction",
+    "mesh_code": "MeSH:D064894",
+    "journal": "Circulation",
+    "date": "2026-05-01",
+    "abstract": "This multicenter study evaluates heart failure with preserved ejection fraction outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-024",
+    "title": "Biomarker testing: a multicenter analysis (2024)",
+    "author_hcp_ids": [
+      "HCP-030"
+    ],
+    "topic": "Biomarker testing",
+    "mesh_code": "MeSH:D014408",
+    "journal": "NEJM",
+    "date": "2024-11-01",
+    "abstract": "This multicenter study evaluates biomarker testing outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-025",
+    "title": "Biomarker testing: a multicenter analysis (2025)",
+    "author_hcp_ids": [
+      "HCP-041",
+      "HCP-039",
+      "HCP-002"
+    ],
+    "topic": "Biomarker testing",
+    "mesh_code": "MeSH:D014408",
+    "journal": "NEJM",
+    "date": "2025-06-01",
+    "abstract": "This multicenter study evaluates biomarker testing outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-026",
+    "title": "Biomarker testing: a multicenter analysis (2026)",
+    "author_hcp_ids": [
+      "HCP-037"
+    ],
+    "topic": "Biomarker testing",
+    "mesh_code": "MeSH:D014408",
+    "journal": "Lancet Oncology",
+    "date": "2026-02-01",
+    "abstract": "This multicenter study evaluates biomarker testing outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-027",
+    "title": "Rheumatoid arthritis biologics: a multicenter analysis (2024)",
+    "author_hcp_ids": [
+      "HCP-038"
+    ],
+    "topic": "Rheumatoid arthritis biologics",
+    "mesh_code": "MeSH:D001172",
+    "journal": "Lancet Oncology",
+    "date": "2024-04-01",
+    "abstract": "This multicenter study evaluates rheumatoid arthritis biologics outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-028",
+    "title": "Heart failure with preserved ejection fraction: a multicenter analysis (2025)",
+    "author_hcp_ids": [
+      "HCP-039"
+    ],
+    "topic": "Heart failure with preserved ejection fraction",
+    "mesh_code": "MeSH:D064894",
+    "journal": "NEJM",
+    "date": "2025-05-01",
+    "abstract": "This multicenter study evaluates heart failure with preserved ejection fraction outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-029",
+    "title": "Biomarker testing: a multicenter analysis (2026)",
+    "author_hcp_ids": [
+      "HCP-035"
+    ],
+    "topic": "Biomarker testing",
+    "mesh_code": "MeSH:D014408",
+    "journal": "JAMA",
+    "date": "2026-03-01",
+    "abstract": "This multicenter study evaluates biomarker testing outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-030",
+    "title": "HER2-low breast cancer: a multicenter analysis (2024)",
+    "author_hcp_ids": [
+      "HCP-002",
+      "HCP-009",
+      "HCP-001"
+    ],
+    "topic": "HER2-low breast cancer",
+    "mesh_code": "MeSH:D000071243",
+    "journal": "JAMA",
+    "date": "2024-04-01",
+    "abstract": "This multicenter study evaluates her2-low breast cancer outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-031",
+    "title": "Rheumatoid arthritis biologics: a multicenter analysis (2025)",
+    "author_hcp_ids": [
+      "HCP-002",
+      "HCP-012"
+    ],
+    "topic": "Rheumatoid arthritis biologics",
+    "mesh_code": "MeSH:D001172",
+    "journal": "JAMA",
+    "date": "2025-01-01",
+    "abstract": "This multicenter study evaluates rheumatoid arthritis biologics outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-032",
+    "title": "Biomarker testing: a multicenter analysis (2026)",
+    "author_hcp_ids": [
+      "HCP-027",
+      "HCP-034",
+      "HCP-008"
+    ],
+    "topic": "Biomarker testing",
+    "mesh_code": "MeSH:D014408",
+    "journal": "NEJM",
+    "date": "2026-08-01",
+    "abstract": "This multicenter study evaluates biomarker testing outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-033",
+    "title": "Type 2 diabetes management: a multicenter analysis (2024)",
+    "author_hcp_ids": [
+      "HCP-033",
+      "HCP-038"
+    ],
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "journal": "NEJM",
+    "date": "2024-08-01",
+    "abstract": "This multicenter study evaluates type 2 diabetes management outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-034",
+    "title": "Rheumatoid arthritis biologics: a multicenter analysis (2025)",
+    "author_hcp_ids": [
+      "HCP-040"
+    ],
+    "topic": "Rheumatoid arthritis biologics",
+    "mesh_code": "MeSH:D001172",
+    "journal": "NEJM",
+    "date": "2025-12-01",
+    "abstract": "This multicenter study evaluates rheumatoid arthritis biologics outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-035",
+    "title": "Multiple sclerosis relapse prevention: a multicenter analysis (2026)",
+    "author_hcp_ids": [
+      "HCP-020",
+      "HCP-030",
+      "HCP-042"
+    ],
+    "topic": "Multiple sclerosis relapse prevention",
+    "mesh_code": "MeSH:D009103",
+    "journal": "NEJM",
+    "date": "2026-01-01",
+    "abstract": "This multicenter study evaluates multiple sclerosis relapse prevention outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-036",
+    "title": "Type 2 diabetes management: a multicenter analysis (2024)",
+    "author_hcp_ids": [
+      "HCP-028",
+      "HCP-044"
+    ],
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "journal": "NEJM",
+    "date": "2024-08-01",
+    "abstract": "This multicenter study evaluates type 2 diabetes management outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-037",
+    "title": "Multiple sclerosis relapse prevention: a multicenter analysis (2025)",
+    "author_hcp_ids": [
+      "HCP-005",
+      "HCP-006"
+    ],
+    "topic": "Multiple sclerosis relapse prevention",
+    "mesh_code": "MeSH:D009103",
+    "journal": "JAMA",
+    "date": "2025-10-01",
+    "abstract": "This multicenter study evaluates multiple sclerosis relapse prevention outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-038",
+    "title": "Biomarker testing: a multicenter analysis (2026)",
+    "author_hcp_ids": [
+      "HCP-009"
+    ],
+    "topic": "Biomarker testing",
+    "mesh_code": "MeSH:D014408",
+    "journal": "JAMA",
+    "date": "2026-10-01",
+    "abstract": "This multicenter study evaluates biomarker testing outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-039",
+    "title": "Multiple sclerosis relapse prevention: a multicenter analysis (2024)",
+    "author_hcp_ids": [
+      "HCP-036",
+      "HCP-046",
+      "HCP-021"
+    ],
+    "topic": "Multiple sclerosis relapse prevention",
+    "mesh_code": "MeSH:D009103",
+    "journal": "Circulation",
+    "date": "2024-10-01",
+    "abstract": "This multicenter study evaluates multiple sclerosis relapse prevention outcomes, reporting endpoints relevant to clinical decision-making."
+  },
+  {
+    "id": "PUB-040",
+    "title": "Rheumatoid arthritis biologics: a multicenter analysis (2025)",
+    "author_hcp_ids": [
+      "HCP-030",
+      "HCP-033"
+    ],
+    "topic": "Rheumatoid arthritis biologics",
+    "mesh_code": "MeSH:D001172",
+    "journal": "Annals of Rheumatic Diseases",
+    "date": "2025-07-01",
+    "abstract": "This multicenter study evaluates rheumatoid arthritis biologics outcomes, reporting endpoints relevant to clinical decision-making."
+  }
+]

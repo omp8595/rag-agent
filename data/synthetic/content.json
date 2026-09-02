@@ -1,0 +1,302 @@
+[
+  {
+    "id": "CNT-001",
+    "title": "T2D: Individualizing Therapy Intensification (1)",
+    "topic": "Multiple sclerosis relapse prevention",
+    "mesh_code": "MeSH:D009103",
+    "therapeutic_area": "Immunology",
+    "approval_status": "approved",
+    "audience": "HCP",
+    "body_text": "Clinical summary covering multiple sclerosis relapse prevention for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-002",
+    "title": "T2D: Individualizing Therapy Intensification (2)",
+    "topic": "Heart failure with preserved ejection fraction",
+    "mesh_code": "MeSH:D064894",
+    "therapeutic_area": "Cardiometabolic",
+    "approval_status": "pending",
+    "audience": "HCP",
+    "body_text": "Clinical summary covering heart failure with preserved ejection fraction for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-003",
+    "title": "Biomarker Testing in Practice: A Clinician's Guide (3)",
+    "topic": "HER2-low breast cancer",
+    "mesh_code": "MeSH:D000071243",
+    "therapeutic_area": "Cardiometabolic",
+    "approval_status": "expired",
+    "audience": "internal",
+    "body_text": "Clinical summary covering her2-low breast cancer for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-004",
+    "title": "Biomarker Testing in Practice: A Clinician's Guide (4)",
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "therapeutic_area": "Neuroscience",
+    "approval_status": "pending",
+    "audience": "internal",
+    "body_text": "Clinical summary covering type 2 diabetes management for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-005",
+    "title": "HFpEF Diagnosis and Management Update (5)",
+    "topic": "Multiple sclerosis relapse prevention",
+    "mesh_code": "MeSH:D009103",
+    "therapeutic_area": "Neuroscience",
+    "approval_status": "approved",
+    "audience": "HCP",
+    "body_text": "Clinical summary covering multiple sclerosis relapse prevention for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-006",
+    "title": "HFpEF Diagnosis and Management Update (6)",
+    "topic": "Multiple sclerosis relapse prevention",
+    "mesh_code": "MeSH:D009103",
+    "therapeutic_area": "Oncology",
+    "approval_status": "pending",
+    "audience": "HCP",
+    "body_text": "Clinical summary covering multiple sclerosis relapse prevention for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-007",
+    "title": "Biologic Selection in Refractory RA (7)",
+    "topic": "Biomarker testing",
+    "mesh_code": "MeSH:D014408",
+    "therapeutic_area": "Cardiometabolic",
+    "approval_status": "pending",
+    "audience": "internal",
+    "body_text": "Clinical summary covering biomarker testing for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-008",
+    "title": "New Data in Relapsing MS: Congress Highlights (8)",
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "therapeutic_area": "Oncology",
+    "approval_status": "approved",
+    "audience": "HCP",
+    "body_text": "Clinical summary covering type 2 diabetes management for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-009",
+    "title": "Biologic Selection in Refractory RA (9)",
+    "topic": "Biomarker testing",
+    "mesh_code": "MeSH:D014408",
+    "therapeutic_area": "Neuroscience",
+    "approval_status": "approved",
+    "audience": "internal",
+    "body_text": "Clinical summary covering biomarker testing for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-010",
+    "title": "New Data in Relapsing MS: Congress Highlights (10)",
+    "topic": "Heart failure with preserved ejection fraction",
+    "mesh_code": "MeSH:D064894",
+    "therapeutic_area": "Neuroscience",
+    "approval_status": "approved",
+    "audience": "internal",
+    "body_text": "Clinical summary covering heart failure with preserved ejection fraction for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-011",
+    "title": "New Data in Relapsing MS: Congress Highlights (11)",
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "therapeutic_area": "Neuroscience",
+    "approval_status": "pending",
+    "audience": "internal",
+    "body_text": "Clinical summary covering type 2 diabetes management for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-012",
+    "title": "Biologic Selection in Refractory RA (12)",
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "therapeutic_area": "Immunology",
+    "approval_status": "approved",
+    "audience": "internal",
+    "body_text": "Clinical summary covering type 2 diabetes management for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-013",
+    "title": "Second-Line Options in HER2-low Breast Cancer (13)",
+    "topic": "Rheumatoid arthritis biologics",
+    "mesh_code": "MeSH:D001172",
+    "therapeutic_area": "Neuroscience",
+    "approval_status": "approved",
+    "audience": "patient",
+    "body_text": "Clinical summary covering rheumatoid arthritis biologics for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-014",
+    "title": "Biologic Selection in Refractory RA (14)",
+    "topic": "HER2-low breast cancer",
+    "mesh_code": "MeSH:D000071243",
+    "therapeutic_area": "Immunology",
+    "approval_status": "approved",
+    "audience": "patient",
+    "body_text": "Clinical summary covering her2-low breast cancer for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-015",
+    "title": "Second-Line Options in HER2-low Breast Cancer (15)",
+    "topic": "Rheumatoid arthritis biologics",
+    "mesh_code": "MeSH:D001172",
+    "therapeutic_area": "Oncology",
+    "approval_status": "approved",
+    "audience": "HCP",
+    "body_text": "Clinical summary covering rheumatoid arthritis biologics for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-016",
+    "title": "Biologic Selection in Refractory RA (16)",
+    "topic": "Multiple sclerosis relapse prevention",
+    "mesh_code": "MeSH:D009103",
+    "therapeutic_area": "Cardiometabolic",
+    "approval_status": "approved",
+    "audience": "HCP",
+    "body_text": "Clinical summary covering multiple sclerosis relapse prevention for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-017",
+    "title": "Biologic Selection in Refractory RA (17)",
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "therapeutic_area": "Immunology",
+    "approval_status": "approved",
+    "audience": "patient",
+    "body_text": "Clinical summary covering type 2 diabetes management for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-018",
+    "title": "Biomarker Testing in Practice: A Clinician's Guide (18)",
+    "topic": "Biomarker testing",
+    "mesh_code": "MeSH:D014408",
+    "therapeutic_area": "Neuroscience",
+    "approval_status": "approved",
+    "audience": "internal",
+    "body_text": "Clinical summary covering biomarker testing for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-019",
+    "title": "T2D: Individualizing Therapy Intensification (19)",
+    "topic": "HER2-low breast cancer",
+    "mesh_code": "MeSH:D000071243",
+    "therapeutic_area": "Neuroscience",
+    "approval_status": "approved",
+    "audience": "patient",
+    "body_text": "Clinical summary covering her2-low breast cancer for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-020",
+    "title": "Second-Line Options in HER2-low Breast Cancer (20)",
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "therapeutic_area": "Neuroscience",
+    "approval_status": "approved",
+    "audience": "internal",
+    "body_text": "Clinical summary covering type 2 diabetes management for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-021",
+    "title": "New Data in Relapsing MS: Congress Highlights (21)",
+    "topic": "Rheumatoid arthritis biologics",
+    "mesh_code": "MeSH:D001172",
+    "therapeutic_area": "Cardiometabolic",
+    "approval_status": "approved",
+    "audience": "patient",
+    "body_text": "Clinical summary covering rheumatoid arthritis biologics for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-022",
+    "title": "Biologic Selection in Refractory RA (22)",
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "therapeutic_area": "Oncology",
+    "approval_status": "approved",
+    "audience": "internal",
+    "body_text": "Clinical summary covering type 2 diabetes management for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-023",
+    "title": "T2D: Individualizing Therapy Intensification (23)",
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "therapeutic_area": "Cardiometabolic",
+    "approval_status": "pending",
+    "audience": "HCP",
+    "body_text": "Clinical summary covering type 2 diabetes management for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-024",
+    "title": "New Data in Relapsing MS: Congress Highlights (24)",
+    "topic": "Rheumatoid arthritis biologics",
+    "mesh_code": "MeSH:D001172",
+    "therapeutic_area": "Oncology",
+    "approval_status": "pending",
+    "audience": "internal",
+    "body_text": "Clinical summary covering rheumatoid arthritis biologics for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-025",
+    "title": "New Data in Relapsing MS: Congress Highlights (25)",
+    "topic": "Multiple sclerosis relapse prevention",
+    "mesh_code": "MeSH:D009103",
+    "therapeutic_area": "Oncology",
+    "approval_status": "approved",
+    "audience": "patient",
+    "body_text": "Clinical summary covering multiple sclerosis relapse prevention for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-026",
+    "title": "HFpEF Diagnosis and Management Update (26)",
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "therapeutic_area": "Cardiometabolic",
+    "approval_status": "approved",
+    "audience": "patient",
+    "body_text": "Clinical summary covering type 2 diabetes management for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-027",
+    "title": "Second-Line Options in HER2-low Breast Cancer (27)",
+    "topic": "Biomarker testing",
+    "mesh_code": "MeSH:D014408",
+    "therapeutic_area": "Neuroscience",
+    "approval_status": "approved",
+    "audience": "patient",
+    "body_text": "Clinical summary covering biomarker testing for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-028",
+    "title": "Second-Line Options in HER2-low Breast Cancer (28)",
+    "topic": "Type 2 diabetes management",
+    "mesh_code": "MeSH:D003924",
+    "therapeutic_area": "Immunology",
+    "approval_status": "pending",
+    "audience": "patient",
+    "body_text": "Clinical summary covering type 2 diabetes management for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-029",
+    "title": "Biomarker Testing in Practice: A Clinician's Guide (29)",
+    "topic": "Multiple sclerosis relapse prevention",
+    "mesh_code": "MeSH:D009103",
+    "therapeutic_area": "Oncology",
+    "approval_status": "expired",
+    "audience": "patient",
+    "body_text": "Clinical summary covering multiple sclerosis relapse prevention for practicing physicians, including recent trial data and practical dosing guidance."
+  },
+  {
+    "id": "CNT-030",
+    "title": "HFpEF Diagnosis and Management Update (30)",
+    "topic": "Multiple sclerosis relapse prevention",
+    "mesh_code": "MeSH:D009103",
+    "therapeutic_area": "Oncology",
+    "approval_status": "approved",
+    "audience": "internal",
+    "body_text": "Clinical summary covering multiple sclerosis relapse prevention for practicing physicians, including recent trial data and practical dosing guidance."
+  }
+]

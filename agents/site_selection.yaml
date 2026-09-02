@@ -1,0 +1,10 @@
+agent:
+  name: Site Selection Agent
+  purpose: site_selection             # binds policy scope
+  audience_roles: [clinical_ops]
+  context_tools: [get_context_package, explain_relationship]
+  action_tools: [create_feasibility_note]
+  guardrails:
+    approved_content_only: false      # not applicable — this agent never touches commercial content
+    human_approval_required: [create_feasibility_note]
+    max_context_hops: 2

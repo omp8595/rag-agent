@@ -1,0 +1,72 @@
+[
+  {
+    "id": "INST-001",
+    "mdm_account_id": "MDM-ACCT-0001",
+    "name": "Tata Memorial Hospital",
+    "type": "cancer_center",
+    "country": "IN"
+  },
+  {
+    "id": "INST-002",
+    "mdm_account_id": "MDM-ACCT-0002",
+    "name": "Mayo Clinic",
+    "type": "academic_medical_center",
+    "country": "UK"
+  },
+  {
+    "id": "INST-003",
+    "mdm_account_id": "MDM-ACCT-0003",
+    "name": "Charite Berlin",
+    "type": "academic_medical_center",
+    "country": "CA"
+  },
+  {
+    "id": "INST-004",
+    "mdm_account_id": "MDM-ACCT-0004",
+    "name": "St. Vincent's Medical Center",
+    "type": "academic_medical_center",
+    "country": "IN"
+  },
+  {
+    "id": "INST-005",
+    "mdm_account_id": "MDM-ACCT-0005",
+    "name": "Toronto General Hospital",
+    "type": "cancer_center",
+    "country": "IN"
+  },
+  {
+    "id": "INST-006",
+    "mdm_account_id": "MDM-ACCT-0006",
+    "name": "Royal Marsden",
+    "type": "cancer_center",
+    "country": "SE"
+  },
+  {
+    "id": "INST-007",
+    "mdm_account_id": "MDM-ACCT-0007",
+    "name": "Cleveland Clinic",
+    "type": "academic_medical_center",
+    "country": "US"
+  },
+  {
+    "id": "INST-008",
+    "mdm_account_id": "MDM-ACCT-0008",
+    "name": "Fudan University Hospital",
+    "type": "academic_medical_center",
+    "country": "CA"
+  },
+  {
+    "id": "INST-009",
+    "mdm_account_id": "MDM-ACCT-0009",
+    "name": "Karolinska University Hospital",
+    "type": "academic_medical_center",
+    "country": "US"
+  },
+  {
+    "id": "INST-010",
+    "mdm_account_id": "MDM-ACCT-0010",
+    "name": "Peter MacCallum Cancer Centre",
+    "type": "cancer_center",
+    "country": "CA"
+  }
+]

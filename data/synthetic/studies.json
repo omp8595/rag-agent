@@ -1,0 +1,37 @@
+[
+  {
+    "id": "STUDY-001",
+    "protocol_id": "PROTO-2026-001",
+    "phase": "Phase 2",
+    "status": "completed",
+    "therapeutic_area": "Oncology"
+  },
+  {
+    "id": "STUDY-002",
+    "protocol_id": "PROTO-2026-002",
+    "phase": "Phase 2",
+    "status": "active_not_recruiting",
+    "therapeutic_area": "Neuroscience"
+  },
+  {
+    "id": "STUDY-003",
+    "protocol_id": "PROTO-2026-003",
+    "phase": "Phase 2",
+    "status": "active_not_recruiting",
+    "therapeutic_area": "Immunology"
+  },
+  {
+    "id": "STUDY-004",
+    "protocol_id": "PROTO-2026-004",
+    "phase": "Phase 3",
+    "status": "active_not_recruiting",
+    "therapeutic_area": "Neuroscience"
+  },
+  {
+    "id": "STUDY-005",
+    "protocol_id": "PROTO-2026-005",
+    "phase": "Phase 2",
+    "status": "active_not_recruiting",
+    "therapeutic_area": "Neuroscience"
+  }
+]
