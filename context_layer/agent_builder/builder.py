@@ -47,6 +47,14 @@ def validate_agent_config(config: AgentConfig) -> None:
             f"the policy-permitted max_hops={policy.max_hops} for '{config.purpose}'"
         )
 
+    unknown_gated = set(config.guardrails.human_approval_required) - set(config.action_tools)
+    if unknown_gated:
+        raise AgentValidationError(
+            f"guardrails.human_approval_required names {sorted(unknown_gated)}, which "
+            f"{'is' if len(unknown_gated) == 1 else 'are'} not in action_tools={config.action_tools} "
+            "— the guardrail would never actually gate anything"
+        )
+
 
 def publish_agent(config: AgentConfig) -> AgentConfig:
     """Validates and returns the config unchanged — the return value is

@@ -72,18 +72,23 @@ def main() -> None:
         f"{len(clinical_pkg['facts'])} facts and never received a single commercial-domain fact."
     )
 
-    print(f"\n{'=' * 70}\nAction tools: the constraint isn't just displayed, it's enforced\n{'=' * 70}")
+    print(f"\n{'=' * 70}\nAction tools: not every guardrail looks the same\n{'=' * 70}")
     _print_action(
-        f"hcp_agent.draft_email({entity_id}) — an active investigator: blocked, not just flagged",
+        f"hcp_agent.draft_email({entity_id}) — an active investigator: blocked by the Context Package's own constraint",
         hcp_agent.draft_email(entity_id, task="biomarker testing outreach"),
     )
     _print_action(
-        "hcp_agent.draft_email(HCP-001) — no such constraint: drafts normally",
+        "hcp_agent.draft_email(HCP-001) — no such constraint, but draft_email is itself human_approval_required: held",
         hcp_agent.draft_email("HCP-001", task="biomarker testing outreach"),
+    )
+    approved_content = assembler.find_content(approval_status="approved")[0]
+    _print_action(
+        "hcp_agent.create_campaign_task(...) — not gated, an internal-only side effect: executes immediately",
+        hcp_agent.create_campaign_task("HCP-001", approved_content["id"]),
     )
     note_result = site_agent.create_feasibility_note(entity_id, "Strong enrollment track record; recommend for Phase 3 expansion.")
     _print_action(
-        "site_agent.create_feasibility_note(...) — guardrailed action: held for approval, never auto-executed",
+        "site_agent.create_feasibility_note(...) — gated: held for approval, never auto-executed",
         note_result,
     )
     _print_action(

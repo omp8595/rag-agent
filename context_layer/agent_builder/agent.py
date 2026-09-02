@@ -50,8 +50,14 @@ class ThinAgent:
         return self.assembler.explain_relationship(entity_a, entity_b, self.config.purpose)
 
     # -- action tools ----------------------------------------------------
+    #
+    # Authorization (`_require_action`) always runs first, before any
+    # context lookup or business-rule evaluation — an unauthorized caller
+    # gets a PermissionError, never a "blocked" or "executed" result that
+    # would reveal the action ran at all.
 
     def draft_email(self, entity_id: str, task: str = "") -> dict:
+        self._require_action("draft_email")
         package = self.get_context(entity_id, task)
         draft = actions.build_email_draft(package, task)
         if draft["blocked"]:
@@ -59,26 +65,27 @@ class ThinAgent:
         return self._dispatch("draft_email", draft)
 
     def create_campaign_task(self, entity_id: str, content_id: str, task: str = "") -> dict:
+        self._require_action("create_campaign_task")
         package = self.get_context(entity_id, task)
-        content = next((c for c in package["recommended_content"] if c["id"] == content_id), None)
-        if content is None:
-            # Not surfaced by this purpose's own recommendations — fall back to
-            # the approved-content catalog, which is purpose-agnostic (§6), but
-            # still require the guardrail's approved-only rule explicitly.
-            content = next((c for c in self.assembler.find_content(approval_status="approved") if c["id"] == content_id), None)
-        if content is None or (self.config.guardrails.approved_content_only and content["approval"] != "approved"):
+        content = self.assembler.store.node(content_id)
+        if content is None or content.get("node_type") != "Content":
+            return {"status": "blocked", "action": "create_campaign_task", "reason": f"{content_id} is not known content"}
+        if self.config.guardrails.approved_content_only and content["approval_status"] != "approved":
             return {"status": "blocked", "action": "create_campaign_task", "reason": f"{content_id} is not approved content"}
-        payload = actions.build_campaign_task(package, content)
+        payload = actions.build_campaign_task(package, {"id": content_id, "title": content["title"]})
         return self._dispatch("create_campaign_task", payload)
 
     def create_feasibility_note(self, entity_id: str, note_text: str) -> dict:
+        self._require_action("create_feasibility_note")
         package = self.get_context(entity_id)
         payload = actions.build_feasibility_note(package, note_text)
         return self._dispatch("create_feasibility_note", payload)
 
-    def _dispatch(self, action_name: str, payload: dict) -> dict:
+    def _require_action(self, action_name: str) -> None:
         if action_name not in self.config.action_tools:
             raise PermissionError(f"{self.config.name} is not configured with {action_name}")
+
+    def _dispatch(self, action_name: str, payload: dict) -> dict:
         if action_name in self.config.guardrails.human_approval_required:
             record = self.approvals.submit(action=action_name, agent=self.config.name, payload=payload)
             return {"status": "pending_approval", "approval_id": record.id, **payload}

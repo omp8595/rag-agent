@@ -6,5 +6,5 @@ agent:
   action_tools: [draft_email, create_campaign_task]
   guardrails:
     approved_content_only: true
-    human_approval_required: [send_email]
+    human_approval_required: [draft_email]
     max_context_hops: 2
