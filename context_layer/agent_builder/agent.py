@@ -20,7 +20,8 @@ from context_layer.agent_builder import actions
 from context_layer.agent_builder.approvals import ApprovalQueue
 from context_layer.agent_builder.schema import AgentConfig
 from context_layer.api.assembler import ContextAssembler
-from context_layer.retrieval.answer_synthesis import synthesize_answer
+from context_layer.llm.grounding import ground_answer
+from context_layer.llm.provider import LLMProvider, MockLLMProvider
 
 
 class ThinAgent:
@@ -51,15 +52,38 @@ class ThinAgent:
         return self.assembler.explain_relationship(entity_a, entity_b, self.config.purpose)
 
     def answer_question(self, entity_id: str, question: str) -> dict:
-        """Generation step: a grounded natural-language answer, built only
-        from an already policy-scoped Context Package. This opens no new
-        access path — it requires the same `get_context_package`
-        authorization `get_context` already checks, and recombines fields
-        the caller was already permitted to see. Returns both the package
-        and the answer so callers (and the evaluation harness) have the
-        retrieved context and the generated answer from one call."""
+        """Generation step, mock provider: a grounded natural-language
+        answer, built only from an already policy-scoped Context Package.
+        Kept as a thin, stable wrapper around `generate_response` for
+        existing callers (campaign_workflow.py, the evaluation runner)
+        that only need `{"package", "answer"}`."""
+        result = self.generate_response(entity_id, question)
+        return {"package": result["package"], "answer": result["answer"]}
+
+    def generate_response(self, entity_id: str, question: str, provider: LLMProvider | None = None) -> dict:
+        """The full agent -> context -> LLM -> grounded response flow.
+        `provider` defaults to `MockLLMProvider` (deterministic, no
+        credentials). The provider receives only `package` and `question`
+        — it has no reference to `self.assembler` or the graph store, so
+        there is no path from "LLM" back to raw enterprise data; the
+        Context Package is the only thing it can see. The response is
+        then checked against that same package (`ground_answer`) so a
+        claim the model invented is distinguishable from one the package
+        actually supports."""
         package = self.get_context(entity_id, question)
-        return {"package": package, "answer": synthesize_answer(package, question)}
+        provider = provider or MockLLMProvider()
+        generated = provider.generate(package, question)
+        grounded = ground_answer(package, generated["answer"])
+        return {
+            "package": package,
+            "answer": grounded["answer"],
+            "context_package_id": grounded["context_package_id"],
+            "supporting_fact_ids": grounded["supporting_fact_ids"],
+            "unsupported_fact_ids": grounded["unsupported_fact_ids"],
+            "warnings": grounded["warnings"],
+            "llm_provider": generated["provider"],
+            "llm_model": generated["model"],
+        }
 
     # -- action tools ----------------------------------------------------
     #

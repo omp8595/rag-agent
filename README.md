@@ -1,110 +1,210 @@
 # rag-agent — Life Sciences Enterprise Context Layer (prototype)
 
-A working prototype of the design in [`docs/design.md`](docs/design.md): a
-policy-scoped Context API, sitting over a partitioned knowledge graph, that
-proves the same HCP produces provably different context depending on which
-agent — and therefore which purpose — is asking.
+**A Policy-Aware Enterprise Context Layer for Life Sciences AI Agents.**
 
-Everything here runs locally with no external services: an in-memory graph
-(networkx) stands in for Neo4j, and per-domain TF-IDF indexes stand in for
-an embedding store, so the demo and tests run offline. All data is
-synthetic — 50 HCPs, 10 institutions, 30 content items, 100 interactions,
-40 publications, 5 studies, generated deterministically.
+Working code, not a slide deck: a policy-scoped Context API sitting over a
+partitioned knowledge graph, proving that the same HCP produces provably
+different, governed context depending on which agent — and therefore
+which approved purpose — is asking, all the way through to a grounded LLM
+response.
 
-## Quickstart
+## 1. Problem statement
 
-```bash
-python3 -m venv .venv
-./.venv/bin/pip install -e ".[dev,eval]"
+Life sciences enterprises hold one HCP's data across Commercial, Medical,
+and Clinical systems, each governed by different rules (promotional
+compliance, scientific exchange rules, clinical trial regulations that
+firewall commercial influence from site selection). Point an AI agent at
+"the data" and you've handed it something no single person is allowed to
+see — a Commercial rep doesn't get MSL medical inquiry detail, a Clinical
+Ops reviewer doesn't get promotional engagement history, and *nobody*
+gets to have commercial data influence which sites get selected for a
+trial. This isn't a data problem. It's a governance problem that happens
+to involve data.
 
-# Week 1: generate the synthetic fixtures (data/synthetic/*.json)
-./.venv/bin/python -m context_layer.data.synthetic_gen
+## 2. Why traditional RAG is insufficient
 
-# Week 6: the demo — same HCP, two agents, two Context Packages
-./.venv/bin/python scripts/demo.py
+A RAG stack answers "what's relevant to this query." It has no opinion on
+"what is this caller allowed to see" — in most RAG stacks that question
+isn't answered anywhere at all, because the retrieval layer doesn't know
+who's asking or why. Bolt an access-control check onto the *output* of
+retrieval and you've built a filter, not a governance layer: the data was
+already fetched, already sat in a prompt, already one bug away from
+leaking. See ["Not traditional RAG"](#not-traditional-rag) below for the
+concrete comparison table.
 
-# A GraphRAG-driven brand-manager promotional campaign across all 50 HCPs
-./.venv/bin/python scripts/campaign_workflow.py "Biomarker testing"
+## 3. What is an Enterprise Context Layer?
 
-# Tests — prove the firewall, policy engine, and scope isolation hold
-./.venv/bin/python -m pytest
+A layer that sits between enterprise source systems and AI agents, and
+decides — before any retrieval happens — what a specific agent, with a
+specific published purpose, is allowed to see for a specific entity. The
+core principle:
 
-# Evaluation — deterministic governance checks, no LLM/API key required
-./.venv/bin/python -m context_layer.evaluation.runner --mode fast
+> **The LLM does not decide what enterprise data it is allowed to see.**
 
-# Run the Context API as an MCP server (stdio transport)
-./.venv/bin/python -m context_layer.api.mcp_server
+```
+Enterprise Knowledge  +  Agent Identity  +  Approved Purpose  +  Policy
+                              ↓
+                   Enterprise Context Layer
+                              ↓
+                Policy-Compliant Context Package
+                              ↓
+                      LLM / AI Agent
 ```
 
-## Architecture → code map
+Domains keep their own data (Commercial IT, Medical IT, Clinical IT stay
+system-of-record owners); the Context Layer holds identity, relationships,
+indexes, and the policy that scopes access to them — not a copy of every
+record. See [`docs/design.md`](docs/design.md) for the original design and
+[`docs/production_reference_architecture.md`](docs/production_reference_architecture.md)
+for the full eight-layer target architecture this prototype is a working
+model of.
 
-| Design doc section | Code |
+## 4. Core architecture
+
+```mermaid
+graph TD
+    A[Identity Spine] --- B[Commercial Subgraph]
+    A --- C[Medical Subgraph]
+    A --- D[Clinical Subgraph]
+    B <-.whitelisted bridge.-> C
+    B <-.whitelisted bridge.-> D
+
+    E[Policy Engine<br/>purpose to retrieval scope] --> F[Context Assembler<br/>entity lookup, graph traversal,<br/>vector search, GraphRAG]
+    B --> F
+    C --> F
+    D --> F
+    F --> G[Context Package<br/>facts + lineage + governance]
+    G --> H[LLM Provider<br/>mock or real]
+    H --> I[Grounded Response<br/>+ supporting_fact_ids]
+```
+
+| Layer | Code |
 |---|---|
-| §1 Data Layer | `context_layer/data/synthetic_gen.py` (generator), `context_layer/data/loader.py` (source-system seam) |
-| §2 Semantic (mapping) Layer | `context_layer/semantic/mapping.py` |
-| §3 Knowledge Graph (partitioned) | `context_layer/graph/store.py` (Identity Spine + domain subgraphs, bounded traversal), `context_layer/graph/build.py` (loaders), `context_layer/graph/bridges.py` (the whitelist table) |
-| §4 Retrieval capabilities | `context_layer/retrieval/entity_lookup.py`, `context_layer/retrieval/vector_index.py`, `context_layer/retrieval/graphrag.py` |
-| §5 Governance & Policy Layer | `context_layer/policy/engine.py` (Request → RetrievalScope), `context_layer/policy/models.py`, `context_layer/policy/audit.py` |
-| §6 Context API (MCP server) | `context_layer/api/assembler.py` (Context Assembler), `context_layer/api/schema.py`, `context_layer/api/mcp_server.py` |
-| §7 Agent Builder | `context_layer/agent_builder/schema.py`, `context_layer/agent_builder/builder.py`, `context_layer/agent_builder/agent.py`, `context_layer/agent_builder/actions.py`, `context_layer/agent_builder/approvals.py`, `agents/*.yaml` |
-| §9 Prototype scope / week-6 demo | `scripts/demo.py`, `scripts/campaign_workflow.py`, `tests/` |
-| Evaluation (RAGAS/DeepEval/LLM-as-judge/deterministic governance) | `context_layer/evaluation/`, `tests/evaluation/` — see [`docs/evaluation.md`](docs/evaluation.md) |
+| Identity Spine + domain subgraphs + bridge whitelist | `context_layer/graph/` |
+| Semantic mapping (MDM/SNOMED/MeSH crosswalk) | `context_layer/semantic/mapping.py` |
+| Policy engine (Request → RetrievalScope, fail-closed) | `context_layer/policy/` |
+| Retrieval (entity lookup, TF-IDF vector index, GraphRAG-lite) | `context_layer/retrieval/` |
+| Context Assembler + Context Package schema | `context_layer/api/` |
+| Agent Builder + ThinAgent (purpose bound at publish time) | `context_layer/agent_builder/` |
+| LLM consumption (mock/real provider, response grounding) | `context_layer/llm/` |
+| MCP server | `context_layer/api/mcp_server.py` |
+| Evaluation (RAGAS/DeepEval/LLM-judge/deterministic governance) | `context_layer/evaluation/` — see [`docs/evaluation.md`](docs/evaluation.md) |
+| Extension-point interfaces (production swap points) | `context_layer/interfaces.py` |
 
-## What the prototype actually enforces
+## 5. Key innovation
 
-- **The bridge whitelist is data, not scattered conditionals** (`graph/bridges.py`), and it's the single choke point `GraphStore.bounded_traversal` consults before crossing a domain boundary — so `tests/test_bridge_firewall.py` can grant *every* bridge that exists and still prove MSL interactions and Commercial↔Clinical/Medical crossings never appear.
-- **Purpose is bound to the agent, not the caller.** `ThinAgent.get_context()` (`agent_builder/agent.py`) has no `purpose` parameter at all — it's fixed at publish time by `agent_builder/builder.py`, which also rejects any `purpose`/`audience_roles` combination the policy engine doesn't recognize. `task` (free text) only ever affects vector-search ranking, never the retrieval scope — see `tests/test_policy_engine.py::test_task_text_never_affects_scope`.
-- **Policy fails closed.** An unregistered purpose or a role not permitted for that purpose raises `PolicyDenied` rather than returning an empty-but-present scope.
-- **Every Context Package is audited** with its request, the scope that was applied, and its `lineage_id` (`policy/audit.py`, appended to `context_layer_audit.log`).
-- **Action tools are authorized before anything else runs, then optionally gated.** `ThinAgent._require_action` (`agent_builder/agent.py`) checks `action_tools` membership as the *first* line of every action method — before any context lookup or business-rule evaluation — so an unauthorized caller gets a `PermissionError`, never a `blocked` result that would reveal the action ran at all. Only past that gate does `_dispatch` check `guardrails.human_approval_required`: an action named there is never executed directly, it's submitted to a shared `ApprovalQueue` (`agent_builder/approvals.py`) and returns `pending_approval` until an explicit `approvals.approve(id)`. `agent_builder/builder.py` rejects, at publish time, any config whose `human_approval_required` names an action that isn't actually in `action_tools` — the class of bug where a guardrail silently gates nothing. `draft_email` adds one more refusal on top: it reads the Context Package's own `constraints` block and returns `blocked` for a promotional draft when one names a promotional exclusion (`agent_builder/actions.py`) — see `tests/test_actions.py`.
-- **GraphRAG never sees more than its own domain, even for a purpose with bridges.** `ContextAssembler._community_summary` calls `retrieval/graphrag.py` once per subgraph in the *granted* scope only — a commercial-purpose request gets a commercial-only summary even though that purpose is bridged into medical and clinical for individual *facts* (`tests/test_graphrag.py`).
+Four things most RAG-over-enterprise-data projects don't have, all
+enforced in code, not just documented:
 
-Run `scripts/demo.py` to see the thesis directly: `HCP-021` (an active
-clinical investigator) produces one Context Package under the HCP
-Engagement Agent (`commercial_engagement`) — publications bridged in,
-investigator status collapsed to a compliance flag, MSL/study detail
-excluded — and a different one under the Site Selection Agent
-(`site_selection`) — full study/enrollment detail, zero commercial facts,
-no bridges applied at all.
+- **The bridge whitelist is data, not scattered conditionals**
+  (`graph/bridges.py`) — the single choke point every graph traversal
+  consults before crossing a domain boundary. `tests/test_bridge_firewall.py`
+  grants *every* bridge that exists and still proves MSL interactions and
+  Commercial↔Clinical/Medical crossings never appear.
+- **Purpose is bound to the agent, not the caller.** `ThinAgent.get_context()`
+  has no `purpose` parameter at all — fixed at publish time, and
+  `agent_builder/builder.py` rejects any purpose/role combination the
+  policy engine doesn't recognize. `task` (free text) only ever affects
+  vector-search ranking, never the retrieval scope.
+- **Policy fails closed.** An unregistered purpose, or a role not
+  permitted for one, raises `PolicyDenied` — never an empty-but-present
+  scope some other layer might treat as "no restriction."
+- **The LLM only ever sees a `dict` Context Package.** `context_layer/llm/provider.py`'s
+  `LLMProvider.generate(context_package, question)` has no reference to
+  the graph store or the assembler — structurally, there is no path from
+  "LLM" back to raw enterprise data.
 
-## GraphRAG-driven promotional campaign
+## 6. The demo: same HCP, different purpose
 
-`scripts/campaign_workflow.py` is a brand-manager workflow built entirely
-on the HCP Engagement Agent's own tools — it opens no new access path.
-For a campaign topic (default `"Biomarker testing"`), it:
+```bash
+./.venv/bin/python scripts/e2e_demo.py
+```
 
-1. **Screens** all 50 HCPs using `community_summary` — GraphRAG-lite's
-   "what does this HCP care about," derived only from their own
-   commercial-domain engagement history. This is the actual targeting
-   signal; `recommended_content` (a global corpus search) is deliberately
-   *not* used for targeting — it matches the whole content library for
-   any query regardless of entity, which made an early version of this
-   script "target" all 50 HCPs. See `tests/test_campaign_workflow.py`.
-2. **Drafts** outreach via `draft_email` for every on-topic HCP — the
-   promotional-exclusion constraint and the human-approval gate are
-   enforced by the agent itself, not re-derived here.
-3. **Logs** a `create_campaign_task` against the top vector-recommended
-   piece of approved content.
-4. **Reports** who's in, who's off-topic, who's excluded on compliance
-   grounds and why, and what a reviewer still has to approve.
+Runs the full chain — `User Question → Published Agent → Purpose-bound
+Config → Context API → Policy Evaluation → Context Package → LLM Prompt
+→ Generated Response` — for one HCP under two agents:
 
-A real run against the synthetic fixtures: 50 screened → 10 on-topic
-(GraphRAG actually discriminates) → 1 held back as an active investigator
-→ 9 drafts approved → 9 campaign tasks logged.
+- **HCP Engagement Agent** (`commercial_engagement`): commercial profile,
+  approved interactions, publications bridged in (full detail), the
+  investigator's clinical status collapsed to a compliance *flag*
+  (never study/enrollment detail).
+- **Clinical Site Selection Agent** (`site_selection`): institution
+  affiliation, full study/enrollment/feasibility detail, zero bridges
+  applied, zero commercial facts.
 
-## Evaluation
+Ends with an isolation verdict computed from the same evaluators the test
+suite uses (`context_layer/evaluation/isolation_evaluator.py`,
+`policy_evaluator.py`) — not a hand-written assertion for the demo:
 
-`context_layer/evaluation/` (see [`docs/evaluation.md`](docs/evaluation.md)
-for the full design) answers a narrower question than a typical RAG eval:
-not just "is the answer good," but *"did the Context Layer return the
-correct, policy-compliant, purpose-specific context in the first place."*
-Deterministic evaluators (policy/graph/lineage/isolation — no LLM, no API
-key, what CI runs on every push) sit alongside RAGAS, DeepEval, and a
-custom LLM-as-judge rubric that all gracefully degrade to a labeled
-`skipped` result with no credentials, never a crash. A policy or bridge
-violation is a hard gate on the unified score, independent of how well
-everything else scores — a factually perfect answer that leaks a
-forbidden domain is still `FAIL`.
+```
+====================================================================
+ISOLATION RESULT
+====================================================================
+Same Entity: YES
+Same Base Data: YES
+Different Purpose: YES
+Different Context Packages: YES
+Unauthorized Data Exposed: NO
+
+STATUS: PASS
+====================================================================
+```
+
+Pass `--real` to use a configured `ANTHROPIC_API_KEY`/`OPENAI_API_KEY`
+instead of the deterministic mock provider — see `context_layer/llm/provider.py`.
+
+`scripts/demo.py` (the earlier, narrower week-6 version of this) and
+`scripts/campaign_workflow.py` (a GraphRAG-driven brand-manager
+promotional campaign across all 50 HCPs — targets using `community_summary`,
+an entity-specific signal, not a global content search that would "match"
+everyone; see its docstring) are still here as smaller, focused demos.
+
+## 7. Governance model
+
+Every Context Package carries a `policy_decision` block (`allowed_domains`,
+`forbidden_domains`, `allowed_bridges`, `redactions`), a `governance` block
+(`domains_accessed`, `bridges_used`, `redactions_applied`), and a
+`lineage` list — one entry per fact naming its `fact_id`, `source_type`,
+`source_id`, `domain`, and `retrieval_method`. Nothing in a package is
+unattributed. Action tools (`draft_email`, `create_campaign_task`,
+`create_feasibility_note`) are authorized *before* any business logic
+runs — an unauthorized caller gets `PermissionError`, never a `blocked`
+result that would reveal the action ran at all — and an action named in
+`guardrails.human_approval_required` is never executed directly; it's
+submitted to a shared `ApprovalQueue` and returns `pending_approval`.
+`agent_builder/builder.py` rejects, at publish time, any config whose
+approval list names an action that isn't actually declared — the class of
+bug where a guardrail silently gates nothing.
+
+Every Context Package is audited with its request, applied scope, and
+lineage (`policy/audit.py`, appended to `context_layer_audit.log`).
+
+## 8. Evaluation framework
+
+`context_layer/evaluation/` (full design in [`docs/evaluation.md`](docs/evaluation.md))
+answers a narrower question than a typical RAG eval: not just "is the
+answer good," but *"did the Context Layer return the correct,
+policy-compliant, purpose-specific context in the first place."*
+
+- **Deterministic governance** (no LLM, no API key, what CI runs on every
+  push): `policy_evaluator`, `graph_evaluator`, `lineage_evaluator`,
+  `isolation_evaluator` — each with tests proving they *discriminate*
+  (a hand-broken input actually gets flagged).
+- **RAGAS**: context precision/recall, faithfulness, answer relevancy.
+  Kept as a separate optional extra (`pip install ragas`) — as of
+  `ragas==0.4.3` it has a real upstream packaging bug in this
+  environment (documented in `docs/evaluation.md`); the adapter degrades
+  to a labeled `skipped` result rather than crashing.
+- **DeepEval**: the RAG Triad + contextual precision/recall, verified
+  working against the installed v4.2.0 API.
+- **LLM-as-judge**: a structured rubric (correctness/relevance/faithfulness/
+  policy_compliance/hallucination_risk) whose `critical_violation` is
+  OR'd against the *deterministic* policy result — never solely the
+  model's own self-report standing between a leak and a passing score.
+
+A policy or bridge violation is a hard gate on the unified score,
+independent of how well everything else scores — a factually perfect
+answer that leaks a forbidden domain is still `FAIL`.
 
 ```bash
 ./.venv/bin/python -m context_layer.evaluation.runner --mode fast   # deterministic only
@@ -113,37 +213,66 @@ forbidden domain is still `FAIL`.
 
 `evaluation_reports/manual_llm_judge_pass.json` is a real judged pass —
 performed directly by an LLM (Claude, in the session that built this
-harness) against the identical rubric `llm_judge.py` sends to a configured
-model, since this dev sandbox has no LLM API key for the script itself to
-call. That pass caught a real bug: `synthesize_answer` never read
-`package["relationships"]`, so a question about an HCP's institutional
-affiliation went unanswered even though the data was in the package —
-fixed, with a regression test.
+harness) against the identical rubric `llm_judge.py` sends to a
+configured model, since this dev sandbox has no LLM API key for the
+script itself to call. That pass caught a real bug: `synthesize_answer`
+never read `package["relationships"]`, so a question about an HCP's
+institutional affiliation went unanswered even though the data was in the
+package — fixed, with a regression test.
 
-## Deliberate simplifications (and why)
+### Not traditional RAG
 
-These are prototype-scoped stand-ins, not the production design — see
-`docs/design.md` §10 for the open decisions they trade off against:
+| | Traditional RAG | This Context Layer |
+|---|---|---|
+| unit | top-k chunks by similarity | a scoped Context Package: facts, relationships, content — with lineage |
+| access | whatever the queried index contains | evaluated by a policy engine before retrieval runs |
+| purpose | implicit in the caller's prompt | bound to the agent definition at publish time |
+| audit | a query log, if that | every package logged with request, scope, and fact lineage |
+| domains | one flat index | partitioned subgraphs, crossed only by a whitelisted bridge |
+| LLM's view | raw retrieved chunks | a `dict` Context Package only — no reference to the data store |
 
-- **networkx instead of Neo4j/RDF** — same partition + bridge-whitelist
-  enforcement model, no server to stand up for a 4–6 week prototype.
-  Swapping in Neo4j means reimplementing `GraphStore`; nothing above it
-  (policy, retrieval, API, agents) would need to change.
-- **A rule table instead of OPA/Cedar** (`policy/engine.py`) — same
-  Request → RetrievalScope contract; a real deployment plugs in the actual
-  policy engine there.
-- **TF-IDF instead of an embedding index** (`retrieval/vector_index.py`) —
-  keeps the demo runnable offline; the per-domain isolation property is
-  identical either way.
-- **GraphRAG is a minimal extractive stub** (`retrieval/graphrag.py`,
-  wired into every Context Package as `community_summary`) — frequency-
-  ranked topics among same-domain neighbors, not LLM-summarized
-  communities. It exists to make design-doc open decision #2 concrete
-  rather than to resolve it.
-- **Three purposes implemented** (`commercial_engagement`, `medical_inquiry`,
-  `site_selection`) against the doc's four-purpose enum — `sales_prep` is
-  named but not defined; adding it is a `PurposePolicy` entry in
-  `policy/engine.py`, nothing structural.
+## 9. Prototype vs. production
+
+Full detail in [`docs/production_reference_architecture.md`](docs/production_reference_architecture.md).
+Short version — every substitution below keeps the same contract at its
+boundary, so swapping the real thing in changes nothing above it:
+
+| | Prototype | Production target |
+|---|---|---|
+| Graph store | `networkx`, in-memory | Neo4j/RDF, same partition + bridge-whitelist contract |
+| Policy engine | a Python rule table | OPA/Cedar, same `Request → RetrievalScope` contract |
+| Vector retrieval | TF-IDF | real embeddings, enterprise vector store |
+| GraphRAG | frequency-ranked extractive stub | LLM-summarized communities |
+| Data | synthetic, static JSON | real CRM/CTMS/publications/MDM, live ingestion |
+| Purposes implemented | 3 of the design doc's 4 (`sales_prep` undefined) | all named purposes, extensible |
+| Secrets | raw env vars | a real secrets store, credential rotation |
+| Approvals | in-memory `ApprovalQueue` | a UI, notifications, a real audit trail |
+
+## 10. Quickstart
+
+```bash
+python3 -m venv .venv
+./.venv/bin/pip install -e ".[dev,eval]"
+
+# generate the synthetic fixtures (data/synthetic/*.json)
+./.venv/bin/python -m context_layer.data.synthetic_gen
+
+# the killer demo — same HCP, two agents, full chain to a grounded response
+./.venv/bin/python scripts/e2e_demo.py
+
+# the narrower week-6 demo, and a GraphRAG-driven campaign workflow
+./.venv/bin/python scripts/demo.py
+./.venv/bin/python scripts/campaign_workflow.py "Biomarker testing"
+
+# tests — prove the firewall, policy engine, and scope isolation hold
+./.venv/bin/python -m pytest
+
+# evaluation — deterministic governance checks, no LLM/API key required
+./.venv/bin/python -m context_layer.evaluation.runner --mode fast
+
+# the Context API as an MCP server (stdio transport)
+./.venv/bin/python -m context_layer.api.mcp_server
+```
 
 ## Repository layout
 
@@ -153,17 +282,21 @@ context_layer/
   semantic/        MDM/standards crosswalk
   graph/           GraphStore, domain loaders, bridge whitelist
   policy/          policy engine, request/scope models, audit log
-  retrieval/       entity lookup, vector index, GraphRAG-lite
+  retrieval/       entity lookup, vector index, GraphRAG-lite, answer synthesis
   api/             Context Assembler, Context Package schema, MCP server
   agent_builder/   agent config schema, publish-time validation, ThinAgent, action tools + approval queue
+  llm/             LLM provider abstraction (mock/real) + response grounding
   evaluation/      RAGAS/DeepEval/LLM-judge adapters, deterministic governance evaluators, runner, reporting
+  interfaces.py    production extension-point Protocols
 agents/            HCP Engagement Agent, Site Selection Agent configs
 data/synthetic/    generated fixtures, committed for convenience — regenerate anytime via synthetic_gen.py
-docs/design.md       the source design document
-docs/evaluation.md   the evaluation layer's design
+docs/design.md                          the source design document
+docs/evaluation.md                      the evaluation layer's design
+docs/production_reference_architecture.md  prototype vs. production, vendor-neutral
 evaluation_reports/  JSON/Markdown reports (git-ignored except the checked-in manual pass)
-scripts/demo.py               the week-6 demo
-scripts/campaign_workflow.py  GraphRAG-driven brand-manager campaign workflow
-tests/             firewall, policy, scope-isolation, action-tool, GraphRAG, and campaign tests
+scripts/e2e_demo.py            the killer demo: agent -> policy -> context -> LLM -> grounded response
+scripts/demo.py                the narrower week-6 demo
+scripts/campaign_workflow.py   GraphRAG-driven brand-manager campaign workflow
+tests/             firewall, policy, scope-isolation, action-tool, GraphRAG, LLM/grounding, and campaign tests
 tests/evaluation/  the evaluation layer's own test suite
 ```

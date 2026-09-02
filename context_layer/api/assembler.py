@@ -10,7 +10,9 @@ and an audit record for the whole request.
 from __future__ import annotations
 
 import uuid
+from datetime import datetime, timezone
 
+from context_layer.graph.bridges import VERSION as BRIDGE_WHITELIST_VERSION
 from context_layer.graph.bridges import get_bridge
 from context_layer.graph.store import Fact, GraphStore
 from context_layer.policy.audit import AuditLog
@@ -88,7 +90,11 @@ class ContextAssembler:
         excluded = self._excluded_domains(scope, purpose)
         summary = self._community_summary(entity_id, scope)
 
+        request_id = f"ctx-{uuid.uuid4().hex[:12]}"
+        forbidden_domains = sorted(e["domain"] for e in excluded)
+
         package = {
+            # -- original fields (every existing caller/test reads these) --
             "entity": {"id": entity_id, "type": node.get("node_type", "Entity"), "display": node.get("display", entity_id)},
             "purpose": purpose,
             "scope_applied": {"subgraphs": scope.subgraphs, "bridges": scope.bridges},
@@ -99,7 +105,40 @@ class ContextAssembler:
             "community_summary": summary,
             "constraints": constraints,
             "excluded": excluded,
-            "lineage_id": f"ctx-{uuid.uuid4().hex[:12]}",
+            "lineage_id": request_id,
+            # -- envelope: the same data, reshaped as a self-describing artifact --
+            "request_id": request_id,
+            "agent": {"agent_id": principal, "role": (principal_roles or [None])[0], "purpose": purpose},
+            "policy_decision": {
+                "allowed": True,  # reaching this point means PolicyEngine.evaluate() did not raise PolicyDenied
+                "allowed_domains": scope.subgraphs,
+                "forbidden_domains": forbidden_domains,
+                "allowed_bridges": scope.bridges,
+                "redactions": scope.redactions,
+            },
+            "retrieval": {
+                "entity_facts": list(profile.keys()),
+                "graph_facts": facts,
+                "vector_results": recommended_content,
+                "community_context": [summary] if summary else [],
+            },
+            "context": {"facts": facts, "documents": recommended_content, "summary": summary},
+            "lineage": [
+                {
+                    "fact_id": f["fact_id"],
+                    "source_type": f["source"],
+                    "source_id": f["source_id"],
+                    "domain": f["domain"],
+                    "retrieval_method": f["retrieval_method"],
+                }
+                for f in facts
+            ],
+            "governance": {
+                "domains_accessed": sorted({f["domain"] for f in facts}),
+                "bridges_used": sorted({f["bridge"] for f in facts if f["bridge"]}),
+                "redactions_applied": scope.redactions,
+            },
+            "audit": {"timestamp": datetime.now(timezone.utc).isoformat(), "policy_version": BRIDGE_WHITELIST_VERSION},
         }
 
         self.audit_log.record(
@@ -223,6 +262,8 @@ class ContextAssembler:
                         "domain": fact.domain,
                         "confidence": 1.0,
                         "bridge": fact.bridged_via,
+                        "source_id": fact.dst,
+                        "retrieval_method": "bridge_traversal" if fact.bridged_via else "graph_traversal",
                     }
                 )
                 continue
@@ -237,8 +278,13 @@ class ContextAssembler:
                     "domain": fact.domain,
                     "confidence": 1.0 if fact.bridged_via is None else 0.9,
                     "bridge": fact.bridged_via,
+                    "source_id": fact.dst,
+                    "retrieval_method": "bridge_traversal" if fact.bridged_via else "graph_traversal",
                 }
             )
+
+        for i, fact_dict in enumerate(facts, start=1):
+            fact_dict["fact_id"] = f"fact_{i:03d}"
 
         return facts, relationships, constraints
 
