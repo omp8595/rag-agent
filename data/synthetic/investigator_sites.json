@@ -1,0 +1,122 @@
+[
+  {
+    "id": "PI-001",
+    "hcp_id": "HCP-021",
+    "study_id": "STUDY-003",
+    "site_institution_id": "INST-003",
+    "role": "PRINCIPAL_INVESTIGATOR_OF",
+    "enrollment_rate": 0.75,
+    "feasibility_score": 0.49,
+    "active": true
+  },
+  {
+    "id": "PI-002",
+    "hcp_id": "HCP-031",
+    "study_id": "STUDY-001",
+    "site_institution_id": "INST-006",
+    "role": "PRINCIPAL_INVESTIGATOR_OF",
+    "enrollment_rate": 0.41,
+    "feasibility_score": 0.45,
+    "active": false
+  },
+  {
+    "id": "PI-003",
+    "hcp_id": "HCP-028",
+    "study_id": "STUDY-001",
+    "site_institution_id": "INST-001",
+    "role": "PRINCIPAL_INVESTIGATOR_OF",
+    "enrollment_rate": 1.19,
+    "feasibility_score": 0.62,
+    "active": false
+  },
+  {
+    "id": "PI-004",
+    "hcp_id": "HCP-009",
+    "study_id": "STUDY-005",
+    "site_institution_id": "INST-003",
+    "role": "PRINCIPAL_INVESTIGATOR_OF",
+    "enrollment_rate": 0.37,
+    "feasibility_score": 0.95,
+    "active": true
+  },
+  {
+    "id": "PI-005",
+    "hcp_id": "HCP-036",
+    "study_id": "STUDY-003",
+    "site_institution_id": "INST-005",
+    "role": "PRINCIPAL_INVESTIGATOR_OF",
+    "enrollment_rate": 1.1,
+    "feasibility_score": 0.64,
+    "active": true
+  },
+  {
+    "id": "PI-006",
+    "hcp_id": "HCP-043",
+    "study_id": "STUDY-004",
+    "site_institution_id": "INST-002",
+    "role": "PRINCIPAL_INVESTIGATOR_OF",
+    "enrollment_rate": 1.34,
+    "feasibility_score": 0.82,
+    "active": true
+  },
+  {
+    "id": "PI-007",
+    "hcp_id": "HCP-019",
+    "study_id": "STUDY-005",
+    "site_institution_id": "INST-001",
+    "role": "PRINCIPAL_INVESTIGATOR_OF",
+    "enrollment_rate": 0.67,
+    "feasibility_score": 0.46,
+    "active": true
+  },
+  {
+    "id": "PI-008",
+    "hcp_id": "HCP-033",
+    "study_id": "STUDY-002",
+    "site_institution_id": "INST-002",
+    "role": "PRINCIPAL_INVESTIGATOR_OF",
+    "enrollment_rate": 0.49,
+    "feasibility_score": 0.68,
+    "active": true
+  },
+  {
+    "id": "PI-009",
+    "hcp_id": "HCP-007",
+    "study_id": "STUDY-003",
+    "site_institution_id": "INST-009",
+    "role": "PRINCIPAL_INVESTIGATOR_OF",
+    "enrollment_rate": 1.31,
+    "feasibility_score": 0.61,
+    "active": true
+  },
+  {
+    "id": "PI-010",
+    "hcp_id": "HCP-049",
+    "study_id": "STUDY-003",
+    "site_institution_id": "INST-001",
+    "role": "PRINCIPAL_INVESTIGATOR_OF",
+    "enrollment_rate": 0.99,
+    "feasibility_score": 0.87,
+    "active": true
+  },
+  {
+    "id": "PI-011",
+    "hcp_id": "HCP-036",
+    "study_id": "STUDY-005",
+    "site_institution_id": "INST-005",
+    "role": "PRINCIPAL_INVESTIGATOR_OF",
+    "enrollment_rate": 1.04,
+    "feasibility_score": 0.77,
+    "active": true
+  },
+  {
+    "id": "PI-012",
+    "hcp_id": "HCP-002",
+    "study_id": "STUDY-005",
+    "site_institution_id": "INST-003",
+    "role": "PRINCIPAL_INVESTIGATOR_OF",
+    "enrollment_rate": 1.41,
+    "feasibility_score": 0.88,
+    "active": true
+  }
+]

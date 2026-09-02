@@ -1,0 +1,10 @@
+agent:
+  name: HCP Engagement Agent
+  purpose: commercial_engagement      # binds policy scope
+  audience_roles: [brand_manager]
+  context_tools: [get_context_package, find_content, explain_relationship]
+  action_tools: [draft_email, create_campaign_task]
+  guardrails:
+    approved_content_only: true
+    human_approval_required: [send_email]
+    max_context_hops: 2

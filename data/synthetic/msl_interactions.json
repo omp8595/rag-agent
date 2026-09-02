@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MSL-001",
+    "hcp_id": "HCP-018",
+    "msl_id": "MSLEMP-003",
+    "topic": "HER2-low breast cancer",
+    "date": "2026-05-23",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-002",
+    "hcp_id": "HCP-049",
+    "msl_id": "MSLEMP-015",
+    "topic": "Heart failure with preserved ejection fraction",
+    "date": "2026-06-12",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-003",
+    "hcp_id": "HCP-001",
+    "msl_id": "MSLEMP-014",
+    "topic": "Biomarker testing",
+    "date": "2026-03-19",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-004",
+    "hcp_id": "HCP-043",
+    "msl_id": "MSLEMP-002",
+    "topic": "Type 2 diabetes management",
+    "date": "2026-03-24",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-005",
+    "hcp_id": "HCP-041",
+    "msl_id": "MSLEMP-002",
+    "topic": "HER2-low breast cancer",
+    "date": "2026-04-13",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-006",
+    "hcp_id": "HCP-027",
+    "msl_id": "MSLEMP-006",
+    "topic": "Type 2 diabetes management",
+    "date": "2026-03-12",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-007",
+    "hcp_id": "HCP-020",
+    "msl_id": "MSLEMP-006",
+    "topic": "Multiple sclerosis relapse prevention",
+    "date": "2026-02-02",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-008",
+    "hcp_id": "HCP-010",
+    "msl_id": "MSLEMP-013",
+    "topic": "Biomarker testing",
+    "date": "2026-01-22",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-009",
+    "hcp_id": "HCP-006",
+    "msl_id": "MSLEMP-008",
+    "topic": "Heart failure with preserved ejection fraction",
+    "date": "2026-07-16",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-010",
+    "hcp_id": "HCP-039",
+    "msl_id": "MSLEMP-007",
+    "topic": "Type 2 diabetes management",
+    "date": "2026-05-07",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-011",
+    "hcp_id": "HCP-049",
+    "msl_id": "MSLEMP-002",
+    "topic": "Rheumatoid arthritis biologics",
+    "date": "2026-06-14",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-012",
+    "hcp_id": "HCP-008",
+    "msl_id": "MSLEMP-011",
+    "topic": "Heart failure with preserved ejection fraction",
+    "date": "2026-08-17",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-013",
+    "hcp_id": "HCP-043",
+    "msl_id": "MSLEMP-001",
+    "topic": "Heart failure with preserved ejection fraction",
+    "date": "2026-04-13",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-014",
+    "hcp_id": "HCP-039",
+    "msl_id": "MSLEMP-001",
+    "topic": "HER2-low breast cancer",
+    "date": "2026-04-10",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-015",
+    "hcp_id": "HCP-014",
+    "msl_id": "MSLEMP-013",
+    "topic": "Biomarker testing",
+    "date": "2026-05-10",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-016",
+    "hcp_id": "HCP-021",
+    "msl_id": "MSLEMP-001",
+    "topic": "HER2-low breast cancer",
+    "date": "2026-08-24",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-017",
+    "hcp_id": "HCP-028",
+    "msl_id": "MSLEMP-003",
+    "topic": "Biomarker testing",
+    "date": "2026-07-18",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-018",
+    "hcp_id": "HCP-046",
+    "msl_id": "MSLEMP-009",
+    "topic": "Biomarker testing",
+    "date": "2026-06-03",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-019",
+    "hcp_id": "HCP-026",
+    "msl_id": "MSLEMP-001",
+    "topic": "Multiple sclerosis relapse prevention",
+    "date": "2026-07-01",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-020",
+    "hcp_id": "HCP-030",
+    "msl_id": "MSLEMP-014",
+    "topic": "HER2-low breast cancer",
+    "date": "2026-06-19",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-021",
+    "hcp_id": "HCP-028",
+    "msl_id": "MSLEMP-007",
+    "topic": "Rheumatoid arthritis biologics",
+    "date": "2026-07-10",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-022",
+    "hcp_id": "HCP-008",
+    "msl_id": "MSLEMP-001",
+    "topic": "Type 2 diabetes management",
+    "date": "2026-06-06",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-023",
+    "hcp_id": "HCP-040",
+    "msl_id": "MSLEMP-014",
+    "topic": "Type 2 diabetes management",
+    "date": "2026-06-03",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-024",
+    "hcp_id": "HCP-028",
+    "msl_id": "MSLEMP-004",
+    "topic": "HER2-low breast cancer",
+    "date": "2026-07-19",
+    "notes": "Medical inquiry response; scientific exchange only."
+  },
+  {
+    "id": "MSL-025",
+    "hcp_id": "HCP-026",
+    "msl_id": "MSLEMP-002",
+    "topic": "Rheumatoid arthritis biologics",
+    "date": "2026-07-28",
+    "notes": "Medical inquiry response; scientific exchange only."
+  }
+]
