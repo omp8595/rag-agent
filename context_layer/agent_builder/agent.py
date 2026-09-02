@@ -20,6 +20,7 @@ from context_layer.agent_builder import actions
 from context_layer.agent_builder.approvals import ApprovalQueue
 from context_layer.agent_builder.schema import AgentConfig
 from context_layer.api.assembler import ContextAssembler
+from context_layer.retrieval.answer_synthesis import synthesize_answer
 
 
 class ThinAgent:
@@ -48,6 +49,17 @@ class ThinAgent:
         if "explain_relationship" not in self.config.context_tools:
             raise PermissionError(f"{self.config.name} is not configured with explain_relationship")
         return self.assembler.explain_relationship(entity_a, entity_b, self.config.purpose)
+
+    def answer_question(self, entity_id: str, question: str) -> dict:
+        """Generation step: a grounded natural-language answer, built only
+        from an already policy-scoped Context Package. This opens no new
+        access path — it requires the same `get_context_package`
+        authorization `get_context` already checks, and recombines fields
+        the caller was already permitted to see. Returns both the package
+        and the answer so callers (and the evaluation harness) have the
+        retrieved context and the generated answer from one call."""
+        package = self.get_context(entity_id, question)
+        return {"package": package, "answer": synthesize_answer(package, question)}
 
     # -- action tools ----------------------------------------------------
     #

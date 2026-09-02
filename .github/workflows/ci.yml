@@ -8,6 +8,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      # deepeval phones home to PostHog by default; package __init__ already
+      # opts out, this is belt-and-suspenders at the CI level too.
+      DEEPEVAL_TELEMETRY_OPT_OUT: "YES"
     steps:
       - uses: actions/checkout@v4
 
@@ -16,10 +20,15 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install -e ".[dev]"
+        # [eval] (deepeval/anthropic/openai) is required even for the
+        # deterministic-only test run below - those adapters' modules import
+        # their libraries at module scope and degrade to "skipped" only at
+        # call time when no LLM key is configured. ragas is a separate,
+        # optional extra (see docs/evaluation.md) and is NOT installed here.
+        run: pip install -e ".[dev,eval]"
 
       - name: Generate synthetic fixtures
         run: python -m context_layer.data.synthetic_gen
 
-      - name: Run tests
+      - name: Run tests (existing suite + fast deterministic evaluation — no LLM credentials required)
         run: python -m pytest -v

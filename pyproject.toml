@@ -13,6 +13,14 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
+eval = ["deepeval>=4.0", "anthropic>=1.0", "openai>=1.0"]
+# Separate extra: ragas has a known packaging issue as of 0.4.3 (its
+# ragas.llms.base unconditionally imports langchain_community.chat_models.vertexai,
+# which doesn't exist in any langchain-community release compatible with the
+# rest of the current langchain 1.x line) - see docs/evaluation.md. The
+# ragas adapter degrades to `skipped` gracefully either way, so it's not a
+# hard dependency of `eval`.
+eval-ragas = ["ragas"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

@@ -15,7 +15,7 @@ synthetic — 50 HCPs, 10 institutions, 30 content items, 100 interactions,
 
 ```bash
 python3 -m venv .venv
-./.venv/bin/pip install -e ".[dev]"
+./.venv/bin/pip install -e ".[dev,eval]"
 
 # Week 1: generate the synthetic fixtures (data/synthetic/*.json)
 ./.venv/bin/python -m context_layer.data.synthetic_gen
@@ -28,6 +28,9 @@ python3 -m venv .venv
 
 # Tests — prove the firewall, policy engine, and scope isolation hold
 ./.venv/bin/python -m pytest
+
+# Evaluation — deterministic governance checks, no LLM/API key required
+./.venv/bin/python -m context_layer.evaluation.runner --mode fast
 
 # Run the Context API as an MCP server (stdio transport)
 ./.venv/bin/python -m context_layer.api.mcp_server
@@ -45,6 +48,7 @@ python3 -m venv .venv
 | §6 Context API (MCP server) | `context_layer/api/assembler.py` (Context Assembler), `context_layer/api/schema.py`, `context_layer/api/mcp_server.py` |
 | §7 Agent Builder | `context_layer/agent_builder/schema.py`, `context_layer/agent_builder/builder.py`, `context_layer/agent_builder/agent.py`, `context_layer/agent_builder/actions.py`, `context_layer/agent_builder/approvals.py`, `agents/*.yaml` |
 | §9 Prototype scope / week-6 demo | `scripts/demo.py`, `scripts/campaign_workflow.py`, `tests/` |
+| Evaluation (RAGAS/DeepEval/LLM-as-judge/deterministic governance) | `context_layer/evaluation/`, `tests/evaluation/` — see [`docs/evaluation.md`](docs/evaluation.md) |
 
 ## What the prototype actually enforces
 
@@ -88,6 +92,34 @@ A real run against the synthetic fixtures: 50 screened → 10 on-topic
 (GraphRAG actually discriminates) → 1 held back as an active investigator
 → 9 drafts approved → 9 campaign tasks logged.
 
+## Evaluation
+
+`context_layer/evaluation/` (see [`docs/evaluation.md`](docs/evaluation.md)
+for the full design) answers a narrower question than a typical RAG eval:
+not just "is the answer good," but *"did the Context Layer return the
+correct, policy-compliant, purpose-specific context in the first place."*
+Deterministic evaluators (policy/graph/lineage/isolation — no LLM, no API
+key, what CI runs on every push) sit alongside RAGAS, DeepEval, and a
+custom LLM-as-judge rubric that all gracefully degrade to a labeled
+`skipped` result with no credentials, never a crash. A policy or bridge
+violation is a hard gate on the unified score, independent of how well
+everything else scores — a factually perfect answer that leaks a
+forbidden domain is still `FAIL`.
+
+```bash
+./.venv/bin/python -m context_layer.evaluation.runner --mode fast   # deterministic only
+./.venv/bin/python -m context_layer.evaluation.runner --mode full   # + RAGAS + DeepEval + LLM Judge
+```
+
+`evaluation_reports/manual_llm_judge_pass.json` is a real judged pass —
+performed directly by an LLM (Claude, in the session that built this
+harness) against the identical rubric `llm_judge.py` sends to a configured
+model, since this dev sandbox has no LLM API key for the script itself to
+call. That pass caught a real bug: `synthesize_answer` never read
+`package["relationships"]`, so a question about an HCP's institutional
+affiliation went unanswered even though the data was in the package —
+fixed, with a regression test.
+
 ## Deliberate simplifications (and why)
 
 These are prototype-scoped stand-ins, not the production design — see
@@ -124,10 +156,14 @@ context_layer/
   retrieval/       entity lookup, vector index, GraphRAG-lite
   api/             Context Assembler, Context Package schema, MCP server
   agent_builder/   agent config schema, publish-time validation, ThinAgent, action tools + approval queue
+  evaluation/      RAGAS/DeepEval/LLM-judge adapters, deterministic governance evaluators, runner, reporting
 agents/            HCP Engagement Agent, Site Selection Agent configs
 data/synthetic/    generated fixtures, committed for convenience — regenerate anytime via synthetic_gen.py
-docs/design.md     the source design document
+docs/design.md       the source design document
+docs/evaluation.md   the evaluation layer's design
+evaluation_reports/  JSON/Markdown reports (git-ignored except the checked-in manual pass)
 scripts/demo.py               the week-6 demo
 scripts/campaign_workflow.py  GraphRAG-driven brand-manager campaign workflow
 tests/             firewall, policy, scope-isolation, action-tool, GraphRAG, and campaign tests
+tests/evaluation/  the evaluation layer's own test suite
 ```

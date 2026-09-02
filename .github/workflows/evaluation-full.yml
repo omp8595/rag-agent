@@ -1,0 +1,38 @@
+name: Full evaluation (RAGAS + DeepEval + LLM Judge)
+
+# Manual only — never runs on push/PR, and never spends LLM API credits
+# automatically. If neither secret below is configured, this still runs
+# and produces a report: every LLM-backed evaluator degrades to a clearly
+# labeled "skipped" result rather than failing (see docs/evaluation.md).
+on:
+  workflow_dispatch:
+
+jobs:
+  full-eval:
+    runs-on: ubuntu-latest
+    env:
+      DEEPEVAL_TELEMETRY_OPT_OUT: "YES"
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies (including the optional ragas extra)
+        run: |
+          pip install -e ".[dev,eval]"
+          pip install ragas || echo "ragas install failed or is incompatible in this environment - the adapter degrades to 'skipped', continuing"
+
+      - name: Generate synthetic fixtures
+        run: python -m context_layer.data.synthetic_gen
+
+      - name: Run full evaluation
+        run: python -m context_layer.evaluation.runner --mode full
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: evaluation-reports
+          path: evaluation_reports/
