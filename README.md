@@ -23,6 +23,9 @@ python3 -m venv .venv
 # Week 6: the demo — same HCP, two agents, two Context Packages
 ./.venv/bin/python scripts/demo.py
 
+# A GraphRAG-driven brand-manager promotional campaign across all 50 HCPs
+./.venv/bin/python scripts/campaign_workflow.py "Biomarker testing"
+
 # Tests — prove the firewall, policy engine, and scope isolation hold
 ./.venv/bin/python -m pytest
 
@@ -41,7 +44,7 @@ python3 -m venv .venv
 | §5 Governance & Policy Layer | `context_layer/policy/engine.py` (Request → RetrievalScope), `context_layer/policy/models.py`, `context_layer/policy/audit.py` |
 | §6 Context API (MCP server) | `context_layer/api/assembler.py` (Context Assembler), `context_layer/api/schema.py`, `context_layer/api/mcp_server.py` |
 | §7 Agent Builder | `context_layer/agent_builder/schema.py`, `context_layer/agent_builder/builder.py`, `context_layer/agent_builder/agent.py`, `context_layer/agent_builder/actions.py`, `context_layer/agent_builder/approvals.py`, `agents/*.yaml` |
-| §9 Prototype scope / week-6 demo | `scripts/demo.py`, `tests/` |
+| §9 Prototype scope / week-6 demo | `scripts/demo.py`, `scripts/campaign_workflow.py`, `tests/` |
 
 ## What the prototype actually enforces
 
@@ -50,6 +53,7 @@ python3 -m venv .venv
 - **Policy fails closed.** An unregistered purpose or a role not permitted for that purpose raises `PolicyDenied` rather than returning an empty-but-present scope.
 - **Every Context Package is audited** with its request, the scope that was applied, and its `lineage_id` (`policy/audit.py`, appended to `context_layer_audit.log`).
 - **Action tools are authorized before anything else runs, then optionally gated.** `ThinAgent._require_action` (`agent_builder/agent.py`) checks `action_tools` membership as the *first* line of every action method — before any context lookup or business-rule evaluation — so an unauthorized caller gets a `PermissionError`, never a `blocked` result that would reveal the action ran at all. Only past that gate does `_dispatch` check `guardrails.human_approval_required`: an action named there is never executed directly, it's submitted to a shared `ApprovalQueue` (`agent_builder/approvals.py`) and returns `pending_approval` until an explicit `approvals.approve(id)`. `agent_builder/builder.py` rejects, at publish time, any config whose `human_approval_required` names an action that isn't actually in `action_tools` — the class of bug where a guardrail silently gates nothing. `draft_email` adds one more refusal on top: it reads the Context Package's own `constraints` block and returns `blocked` for a promotional draft when one names a promotional exclusion (`agent_builder/actions.py`) — see `tests/test_actions.py`.
+- **GraphRAG never sees more than its own domain, even for a purpose with bridges.** `ContextAssembler._community_summary` calls `retrieval/graphrag.py` once per subgraph in the *granted* scope only — a commercial-purpose request gets a commercial-only summary even though that purpose is bridged into medical and clinical for individual *facts* (`tests/test_graphrag.py`).
 
 Run `scripts/demo.py` to see the thesis directly: `HCP-021` (an active
 clinical investigator) produces one Context Package under the HCP
@@ -58,6 +62,31 @@ investigator status collapsed to a compliance flag, MSL/study detail
 excluded — and a different one under the Site Selection Agent
 (`site_selection`) — full study/enrollment detail, zero commercial facts,
 no bridges applied at all.
+
+## GraphRAG-driven promotional campaign
+
+`scripts/campaign_workflow.py` is a brand-manager workflow built entirely
+on the HCP Engagement Agent's own tools — it opens no new access path.
+For a campaign topic (default `"Biomarker testing"`), it:
+
+1. **Screens** all 50 HCPs using `community_summary` — GraphRAG-lite's
+   "what does this HCP care about," derived only from their own
+   commercial-domain engagement history. This is the actual targeting
+   signal; `recommended_content` (a global corpus search) is deliberately
+   *not* used for targeting — it matches the whole content library for
+   any query regardless of entity, which made an early version of this
+   script "target" all 50 HCPs. See `tests/test_campaign_workflow.py`.
+2. **Drafts** outreach via `draft_email` for every on-topic HCP — the
+   promotional-exclusion constraint and the human-approval gate are
+   enforced by the agent itself, not re-derived here.
+3. **Logs** a `create_campaign_task` against the top vector-recommended
+   piece of approved content.
+4. **Reports** who's in, who's off-topic, who's excluded on compliance
+   grounds and why, and what a reviewer still has to approve.
+
+A real run against the synthetic fixtures: 50 screened → 10 on-topic
+(GraphRAG actually discriminates) → 1 held back as an active investigator
+→ 9 drafts approved → 9 campaign tasks logged.
 
 ## Deliberate simplifications (and why)
 
@@ -74,8 +103,9 @@ These are prototype-scoped stand-ins, not the production design — see
 - **TF-IDF instead of an embedding index** (`retrieval/vector_index.py`) —
   keeps the demo runnable offline; the per-domain isolation property is
   identical either way.
-- **GraphRAG is a minimal extractive stub** (`retrieval/graphrag.py`) —
-  frequency-ranked topics among same-domain neighbors, not LLM-summarized
+- **GraphRAG is a minimal extractive stub** (`retrieval/graphrag.py`,
+  wired into every Context Package as `community_summary`) — frequency-
+  ranked topics among same-domain neighbors, not LLM-summarized
   communities. It exists to make design-doc open decision #2 concrete
   rather than to resolve it.
 - **Three purposes implemented** (`commercial_engagement`, `medical_inquiry`,
@@ -97,6 +127,7 @@ context_layer/
 agents/            HCP Engagement Agent, Site Selection Agent configs
 data/synthetic/    generated fixtures, committed for convenience — regenerate anytime via synthetic_gen.py
 docs/design.md     the source design document
-scripts/demo.py    the week-6 demo
-tests/             firewall, policy, and scope-isolation tests
+scripts/demo.py               the week-6 demo
+scripts/campaign_workflow.py  GraphRAG-driven brand-manager campaign workflow
+tests/             firewall, policy, scope-isolation, action-tool, GraphRAG, and campaign tests
 ```

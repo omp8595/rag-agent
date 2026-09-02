@@ -50,6 +50,7 @@ class ContextPackage(BaseModel):
     facts: list[FactEntry]
     relationships: list[RelationshipEntry]
     recommended_content: list[ContentRec]
+    community_summary: str | None = None
     constraints: list[str]
     excluded: list[ExclusionEntry]
     lineage_id: str

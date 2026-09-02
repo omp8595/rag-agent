@@ -17,6 +17,7 @@ from context_layer.policy.audit import AuditLog
 from context_layer.policy.engine import PolicyEngine
 from context_layer.policy.models import PolicyRequest, RetrievalScope
 from context_layer.retrieval.entity_lookup import get_entity_profile
+from context_layer.retrieval.graphrag import community_summary
 from context_layer.retrieval.vector_index import DomainVectorIndex
 
 # Human-readable reasons shown in `excluded` for a domain the requesting
@@ -85,6 +86,7 @@ class ContextAssembler:
         facts, relationships, constraints = self._classify_facts(raw_facts, purpose)
         recommended_content = self._recommend_content(scope, task)
         excluded = self._excluded_domains(scope, purpose)
+        summary = self._community_summary(entity_id, scope)
 
         package = {
             "entity": {"id": entity_id, "type": node.get("node_type", "Entity"), "display": node.get("display", entity_id)},
@@ -94,6 +96,7 @@ class ContextAssembler:
             "facts": facts,
             "relationships": relationships,
             "recommended_content": recommended_content,
+            "community_summary": summary,
             "constraints": constraints,
             "excluded": excluded,
             "lineage_id": f"ctx-{uuid.uuid4().hex[:12]}",
@@ -263,6 +266,19 @@ class ContextAssembler:
                     {"id": node["id"], "title": node["title"], "approval": node["approval_status"], "audience": node["audience"]}
                 )
         return recs
+
+    def _community_summary(self, entity_id: str, scope: RetrievalScope) -> str | None:
+        """GraphRAG capability (design doc §4.3) — "what does this entity
+        care about," computed strictly per granted domain. Never passed a
+        domain outside `scope.subgraphs`, so it can't become a side
+        channel around the bridge whitelist the way a careless "summarize
+        everything reachable" implementation could."""
+        parts = [
+            text
+            for domain in scope.subgraphs
+            if (text := community_summary(self.store, entity_id, domain=domain, max_hops=scope.max_hops))
+        ]
+        return " ".join(parts) if parts else None
 
     @staticmethod
     def _excluded_domains(scope: RetrievalScope, purpose: str) -> list[dict]:
