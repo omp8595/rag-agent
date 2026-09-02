@@ -159,6 +159,31 @@ promotional campaign across all 50 HCPs — targets using `community_summary`,
 an entity-specific signal, not a global content search that would "match"
 everyone; see its docstring) are still here as smaller, focused demos.
 
+### Live demo flow (HTTP)
+
+The same demo, over HTTP — `python -m context_layer.api.http_server`,
+then `curl http://localhost:8080/demo/compare/HCP-021`:
+
+```
+Same HCP
+    │
+    ├───────────────┐
+    │               │
+Commercial      Clinical
+Agent           Agent
+    │               │
+Policy A        Policy B
+    │               │
+Context A       Context B
+    │               │
+    └──── Different Governed Context ────┘
+```
+
+`docs/deployment.md` covers local run, Docker, environment variables, and
+prepared (not executed — no cloud credentials available in this
+environment) deployment steps. **PROTOTYPE VALIDATED — NOT PRODUCTION
+READY** — see [`docs/deployment_validation_report.md`](docs/deployment_validation_report.md).
+
 ## 7. Governance model
 
 Every Context Package carries a `policy_decision` block (`allowed_domains`,
@@ -286,6 +311,14 @@ python3 -m venv .venv
 
 # the Context API as an MCP server (stdio transport)
 ./.venv/bin/python -m context_layer.api.mcp_server
+
+# the Context API as a demo HTTP API — see docs/deployment.md
+./.venv/bin/python -m context_layer.api.http_server
+# then: curl localhost:8080/health, /ready, /demo/compare/HCP-021
+
+# Docker
+docker build -t rag-agent:local .
+docker run -d -p 8080:8080 rag-agent:local
 ```
 
 ## Repository layout
@@ -297,7 +330,7 @@ context_layer/
   graph/           GraphStore, domain loaders, bridge whitelist
   policy/          policy engine, request/scope models, audit log
   retrieval/       entity lookup, vector index, GraphRAG-lite, answer synthesis
-  api/             Context Assembler, Context Package schema, MCP server
+  api/             Context Assembler, Context Package schema, MCP server, demo HTTP API (http_server.py)
   agent_builder/   agent config schema, publish-time validation, ThinAgent, action tools + approval queue
   llm/             LLM provider abstraction (mock/real) + response grounding
   evaluation/      RAGAS/DeepEval/LLM-judge adapters, deterministic governance evaluators, runner, reporting
@@ -307,10 +340,16 @@ data/synthetic/    generated fixtures, committed for convenience — regenerate 
 docs/design.md                          the source design document
 docs/evaluation.md                      the evaluation layer's design
 docs/production_reference_architecture.md  prototype vs. production, vendor-neutral
-evaluation_reports/  JSON/Markdown reports (git-ignored except the checked-in manual pass)
+docs/test_report.md                     comprehensive adversarial validation pass
+docs/deployment.md                      local/Docker/deployment instructions
+docs/deployment_validation_report.md    Docker + deployment-readiness findings
+docs/pilot_plan.md                      controlled pilot plan (synthetic/representative data only)
+evaluation_reports/  JSON/Markdown reports (git-ignored except the checked-in manual pass and test_report.json)
+Dockerfile, .dockerignore, .env.example  containerization + config (see docs/deployment.md)
 scripts/e2e_demo.py            the killer demo: agent -> policy -> context -> LLM -> grounded response
 scripts/demo.py                the narrower week-6 demo
 scripts/campaign_workflow.py   GraphRAG-driven brand-manager campaign workflow
-tests/             firewall, policy, scope-isolation, action-tool, GraphRAG, LLM/grounding, and campaign tests
+tests/             firewall, policy, scope-isolation, action-tool, GraphRAG, LLM/grounding, HTTP API,
+                    adversarial, privilege-escalation, and campaign tests
 tests/evaluation/  the evaluation layer's own test suite
 ```

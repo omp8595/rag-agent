@@ -32,3 +32,33 @@ jobs:
 
       - name: Run tests (existing suite + fast deterministic evaluation — no LLM credentials required)
         run: python -m pytest -v
+
+  docker:
+    runs-on: ubuntu-latest
+    # This job exists because the Dockerfile could only be validated in
+    # this repo's own dev environment by simulating its steps in a venv
+    # (no privileged Docker daemon there) - see docs/deployment.md. A
+    # GitHub-hosted runner has a real daemon, so this is the actual
+    # `docker build` + `docker run` + endpoint check that sandbox
+    # couldn't perform. No registry push, no secrets.
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the image
+        run: docker build -t rag-agent:ci .
+
+      - name: Run the container and validate it serves traffic
+        run: |
+          docker run -d --name rag-agent-ci -p 8080:8080 rag-agent:ci
+          for i in $(seq 1 20); do
+            if curl -sf http://127.0.0.1:8080/health > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:8080/health
+          curl -sf http://127.0.0.1:8080/ready
+          curl -sf http://127.0.0.1:8080/demo/compare/HCP-021 | python3 -c "import json,sys; d=json.load(sys.stdin); assert d['comparison']['status'] == 'PASS', d['comparison']; print('primary acceptance test PASS inside the running container')"
+          # purpose override must still be rejected inside the container
+          code=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://127.0.0.1:8080/context -H "Content-Type: application/json" -d '{"agent_id":"hcp_engagement_agent","entity_id":"HCP-001","question":"x","purpose":"site_selection"}')
+          test "$code" = "422"
+          docker logs rag-agent-ci
+          docker stop rag-agent-ci

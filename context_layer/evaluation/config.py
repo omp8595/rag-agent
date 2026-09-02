@@ -4,8 +4,11 @@ this, so there is exactly one skip/error path to test, not three.
 
 Env vars:
   EVAL_LLM_PROVIDER   "anthropic" | "openai"  (default: whichever key is set;
-                       anthropic wins if both are)
-  EVAL_MODEL           model id (defaults per provider below)
+                       anthropic wins if both are). LLM_PROVIDER is
+                       accepted as an alias (checked second) for callers
+                       that set the generic service-wide name instead.
+  EVAL_MODEL           model id (defaults per provider below). LLM_MODEL
+                       is accepted as an alias (checked second).
   ANTHROPIC_API_KEY / OPENAI_API_KEY
 """
 
@@ -33,7 +36,7 @@ def get_eval_llm_config() -> EvalLLMConfig | None:
     "never crash the suite for a missing key" requirement."""
     anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
     openai_key = os.environ.get("OPENAI_API_KEY")
-    provider = os.environ.get("EVAL_LLM_PROVIDER", "").lower() or None
+    provider = (os.environ.get("EVAL_LLM_PROVIDER") or os.environ.get("LLM_PROVIDER") or "").lower() or None
 
     if provider is None:
         if anthropic_key:
@@ -47,7 +50,7 @@ def get_eval_llm_config() -> EvalLLMConfig | None:
     if not api_key:
         return None
 
-    model = os.environ.get("EVAL_MODEL") or _DEFAULT_MODELS.get(provider)
+    model = os.environ.get("EVAL_MODEL") or os.environ.get("LLM_MODEL") or _DEFAULT_MODELS.get(provider)
     if model is None:
         return None
     return EvalLLMConfig(provider=provider, model=model, api_key=api_key)
