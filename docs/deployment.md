@@ -62,8 +62,8 @@ regenerates it identically.
 ./.venv/bin/python -m pytest -v
 ```
 
-118 tests, all deterministic — no LLM API key required. This is exactly
-what CI runs on every push (`.github/workflows/ci.yml`).
+119 tests, all deterministic — no LLM API key required. This is exactly
+what CI runs on every push (`.github/workflows/test.yml`).
 
 ## 6. Running the demo
 
@@ -108,7 +108,7 @@ specifies — `pip install -r requirements.txt` into a clean virtualenv,
 context_layer.api.http_server` as the exact CMD — run end-to-end, with
 every endpoint in §9 curled and confirmed correct. The real `docker
 build`/`docker run` steps are additionally validated by
-`.github/workflows/ci.yml`'s `docker` job on every push, since GitHub's
+`.github/workflows/docker.yml`'s `docker` job on every push, since GitHub's
 hosted runners do have a working daemon — that job builds the image,
 runs the container, and re-runs the primary acceptance test's compare
 endpoint plus the purpose-override rejection against the actual running
@@ -203,7 +203,7 @@ curl -s -o /dev/null -w "%{http_code}\n" -X POST $BASE/context -H "Content-Type:
 # ^ must print 422, not 200
 ```
 
-This mirrors exactly what `.github/workflows/ci.yml`'s `docker` job
+This mirrors exactly what `.github/workflows/docker.yml`'s `docker` job
 already runs against the containerized build on every push.
 
 ## Known limitations

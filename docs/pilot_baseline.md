@@ -81,7 +81,7 @@ whitelist and purpose table reflect real compliance rules.
 | Full context assembly, mean (single warm process, n=200, 50-HCP synthetic graph) | 2.158 ms | `docs/test_report.md` §7 |
 | End-to-end incl. mock LLM, mean (n=50) | 2.030 ms | `docs/test_report.md` §7 |
 | Cold graph build (50 HCPs, 10 institutions, etc.) | 2.70 ms | `docs/test_report.md` §7 |
-| Docker container build+run+health-check | PASS, validated via CI on a GitHub-hosted runner (real Docker daemon) | `.github/workflows/ci.yml` `docker` job, `docs/deployment_validation_report.md` §4 |
+| Docker container build+run+health-check | PASS, validated via CI on a GitHub-hosted runner (real Docker daemon) | `.github/workflows/docker.yml`, `docs/deployment_validation_report.md` §4 |
 | Live cloud deployment | **Not performed** — no usable cloud credentials found in the build environment (a read-only AWS `sts:GetCallerIdentity` check returned `InvalidClientTokenId`) | `docs/deployment_validation_report.md` §5 |
 
 These performance numbers are in-memory, single-process, prototype-scale

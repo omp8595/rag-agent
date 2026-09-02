@@ -140,7 +140,7 @@ in `retrieval/answer_synthesis.py`, with a regression test.
 
 ## CI
 
-- `ci.yml` (every push/PR): existing test suite + `tests/evaluation/`'s
+- `test.yml` (every push/PR): existing test suite + `tests/evaluation/`'s
   deterministic evaluators. No LLM credentials required or used.
 - `evaluation-full.yml` (`workflow_dispatch` only, never automatic):
   `--mode full` against whichever of `ANTHROPIC_API_KEY` /
