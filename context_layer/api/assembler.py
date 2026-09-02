@@ -152,7 +152,7 @@ class ContextAssembler:
             return {"path": None, "reason": "no path within permitted subgraph(s)"}
         return {"path": path, "scope_applied": {"subgraphs": scope.subgraphs, "bridges": scope.bridges}}
 
-    def find_content(self, topic: str, audience: str = "HCP", approval_status: str = "approved") -> list[dict]:
+    def find_content(self, topic: str = "", audience: str = "HCP", approval_status: str = "approved") -> list[dict]:
         results = []
         for node in self.store.find_nodes(node_type="Content", domain="commercial"):
             if node["approval_status"] != approval_status:

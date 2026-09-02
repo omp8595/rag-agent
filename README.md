@@ -40,7 +40,7 @@ python3 -m venv .venv
 | §4 Retrieval capabilities | `context_layer/retrieval/entity_lookup.py`, `context_layer/retrieval/vector_index.py`, `context_layer/retrieval/graphrag.py` |
 | §5 Governance & Policy Layer | `context_layer/policy/engine.py` (Request → RetrievalScope), `context_layer/policy/models.py`, `context_layer/policy/audit.py` |
 | §6 Context API (MCP server) | `context_layer/api/assembler.py` (Context Assembler), `context_layer/api/schema.py`, `context_layer/api/mcp_server.py` |
-| §7 Agent Builder | `context_layer/agent_builder/schema.py`, `context_layer/agent_builder/builder.py`, `context_layer/agent_builder/agent.py`, `agents/*.yaml` |
+| §7 Agent Builder | `context_layer/agent_builder/schema.py`, `context_layer/agent_builder/builder.py`, `context_layer/agent_builder/agent.py`, `context_layer/agent_builder/actions.py`, `context_layer/agent_builder/approvals.py`, `agents/*.yaml` |
 | §9 Prototype scope / week-6 demo | `scripts/demo.py`, `tests/` |
 
 ## What the prototype actually enforces
@@ -49,6 +49,7 @@ python3 -m venv .venv
 - **Purpose is bound to the agent, not the caller.** `ThinAgent.get_context()` (`agent_builder/agent.py`) has no `purpose` parameter at all — it's fixed at publish time by `agent_builder/builder.py`, which also rejects any `purpose`/`audience_roles` combination the policy engine doesn't recognize. `task` (free text) only ever affects vector-search ranking, never the retrieval scope — see `tests/test_policy_engine.py::test_task_text_never_affects_scope`.
 - **Policy fails closed.** An unregistered purpose or a role not permitted for that purpose raises `PolicyDenied` rather than returning an empty-but-present scope.
 - **Every Context Package is audited** with its request, the scope that was applied, and its `lineage_id` (`policy/audit.py`, appended to `context_layer_audit.log`).
+- **Action tools are gated the same way context tools are, plus one more check.** `agents/*.yaml` declare `action_tools` (`draft_email`, `create_campaign_task`, `create_feasibility_note`) and a `guardrails.human_approval_required` list. `ThinAgent._dispatch` (`agent_builder/agent.py`) never executes an action named in that list — it submits it to a shared `ApprovalQueue` (`agent_builder/approvals.py`) and returns `pending_approval`; only an explicit `approvals.approve(id)` moves it further. `draft_email` goes one step past that: it reads the Context Package's own `constraints` block and returns `blocked` for a promotional draft when one names a promotional exclusion (`agent_builder/actions.py`) — see `tests/test_actions.py`.
 
 Run `scripts/demo.py` to see the thesis directly: `HCP-021` (an active
 clinical investigator) produces one Context Package under the HCP
@@ -92,7 +93,7 @@ context_layer/
   policy/          policy engine, request/scope models, audit log
   retrieval/       entity lookup, vector index, GraphRAG-lite
   api/             Context Assembler, Context Package schema, MCP server
-  agent_builder/   agent config schema, publish-time validation, ThinAgent
+  agent_builder/   agent config schema, publish-time validation, ThinAgent, action tools + approval queue
 agents/            HCP Engagement Agent, Site Selection Agent configs
 data/synthetic/    generated fixtures, committed for convenience — regenerate anytime via synthetic_gen.py
 docs/design.md     the source design document

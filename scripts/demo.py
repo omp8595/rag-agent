@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 
 from context_layer.agent_builder.agent import ThinAgent
+from context_layer.agent_builder.approvals import ApprovalQueue
 from context_layer.agent_builder.builder import load_agent_config, publish_agent
 from context_layer.api.app import build_assembler
 from context_layer.data.loader import load_source_data
@@ -41,12 +42,18 @@ def _print_package(agent_name: str, package: dict) -> None:
     print("lineage_id:    ", package["lineage_id"])
 
 
+def _print_action(label: str, result: dict) -> None:
+    print(f"\n--- {label} ---")
+    print(json.dumps(result, indent=2))
+
+
 def main() -> None:
     assembler = build_assembler()
+    approvals = ApprovalQueue()
     entity_id = _pick_demo_entity()
 
-    hcp_agent = ThinAgent(publish_agent(load_agent_config("agents/hcp_engagement.yaml")), assembler)
-    site_agent = ThinAgent(publish_agent(load_agent_config("agents/site_selection.yaml")), assembler)
+    hcp_agent = ThinAgent(publish_agent(load_agent_config("agents/hcp_engagement.yaml")), assembler, approvals)
+    site_agent = ThinAgent(publish_agent(load_agent_config("agents/site_selection.yaml")), assembler, approvals)
 
     commercial_pkg = hcp_agent.get_context(entity_id, task="biomarker testing outreach")
     clinical_pkg = site_agent.get_context(entity_id)
@@ -63,6 +70,25 @@ def main() -> None:
         f"commercial_engagement saw {len(commercial_pkg['facts'])} facts and withheld "
         f"{len(commercial_pkg['excluded'])} domains; site_selection saw "
         f"{len(clinical_pkg['facts'])} facts and never received a single commercial-domain fact."
+    )
+
+    print(f"\n{'=' * 70}\nAction tools: the constraint isn't just displayed, it's enforced\n{'=' * 70}")
+    _print_action(
+        f"hcp_agent.draft_email({entity_id}) — an active investigator: blocked, not just flagged",
+        hcp_agent.draft_email(entity_id, task="biomarker testing outreach"),
+    )
+    _print_action(
+        "hcp_agent.draft_email(HCP-001) — no such constraint: drafts normally",
+        hcp_agent.draft_email("HCP-001", task="biomarker testing outreach"),
+    )
+    note_result = site_agent.create_feasibility_note(entity_id, "Strong enrollment track record; recommend for Phase 3 expansion.")
+    _print_action(
+        "site_agent.create_feasibility_note(...) — guardrailed action: held for approval, never auto-executed",
+        note_result,
+    )
+    _print_action(
+        "a human approves it",
+        vars(approvals.approve(note_result["approval_id"])),
     )
 
 

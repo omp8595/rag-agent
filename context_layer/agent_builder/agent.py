@@ -2,18 +2,31 @@
 user": ThinAgent closes over a published AgentConfig and never exposes
 purpose (or roles) as something a caller can pass in — every context
 request an agent makes goes out under its own fixed identity.
+
+Action tools (`action_tools` in the config) work the same way as context
+tools — declared at publish time, checked before every call — plus one
+more gate: an action named in `guardrails.human_approval_required` is
+never executed here. It's submitted to the shared ApprovalQueue and comes
+back `pending_approval`; only a human calling `approvals.approve()` moves
+it further. `draft_email` adds a second kind of refusal on top of that:
+it reads the Context Package's own `constraints` and declines to draft
+promotional outreach when one names a promotional exclusion, instead of
+drafting it and trusting a human to catch the conflict later.
 """
 
 from __future__ import annotations
 
+from context_layer.agent_builder import actions
+from context_layer.agent_builder.approvals import ApprovalQueue
 from context_layer.agent_builder.schema import AgentConfig
 from context_layer.api.assembler import ContextAssembler
 
 
 class ThinAgent:
-    def __init__(self, config: AgentConfig, assembler: ContextAssembler):
+    def __init__(self, config: AgentConfig, assembler: ContextAssembler, approvals: ApprovalQueue | None = None):
         self.config = config
         self.assembler = assembler
+        self.approvals = approvals if approvals is not None else ApprovalQueue()
 
     def get_context(self, entity_id: str, task: str = "") -> dict:
         if "get_context_package" not in self.config.context_tools:
@@ -35,3 +48,38 @@ class ThinAgent:
         if "explain_relationship" not in self.config.context_tools:
             raise PermissionError(f"{self.config.name} is not configured with explain_relationship")
         return self.assembler.explain_relationship(entity_a, entity_b, self.config.purpose)
+
+    # -- action tools ----------------------------------------------------
+
+    def draft_email(self, entity_id: str, task: str = "") -> dict:
+        package = self.get_context(entity_id, task)
+        draft = actions.build_email_draft(package, task)
+        if draft["blocked"]:
+            return {"status": "blocked", **draft}
+        return self._dispatch("draft_email", draft)
+
+    def create_campaign_task(self, entity_id: str, content_id: str, task: str = "") -> dict:
+        package = self.get_context(entity_id, task)
+        content = next((c for c in package["recommended_content"] if c["id"] == content_id), None)
+        if content is None:
+            # Not surfaced by this purpose's own recommendations — fall back to
+            # the approved-content catalog, which is purpose-agnostic (§6), but
+            # still require the guardrail's approved-only rule explicitly.
+            content = next((c for c in self.assembler.find_content(approval_status="approved") if c["id"] == content_id), None)
+        if content is None or (self.config.guardrails.approved_content_only and content["approval"] != "approved"):
+            return {"status": "blocked", "action": "create_campaign_task", "reason": f"{content_id} is not approved content"}
+        payload = actions.build_campaign_task(package, content)
+        return self._dispatch("create_campaign_task", payload)
+
+    def create_feasibility_note(self, entity_id: str, note_text: str) -> dict:
+        package = self.get_context(entity_id)
+        payload = actions.build_feasibility_note(package, note_text)
+        return self._dispatch("create_feasibility_note", payload)
+
+    def _dispatch(self, action_name: str, payload: dict) -> dict:
+        if action_name not in self.config.action_tools:
+            raise PermissionError(f"{self.config.name} is not configured with {action_name}")
+        if action_name in self.config.guardrails.human_approval_required:
+            record = self.approvals.submit(action=action_name, agent=self.config.name, payload=payload)
+            return {"status": "pending_approval", "approval_id": record.id, **payload}
+        return {"status": "executed", **payload}
