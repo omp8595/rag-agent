@@ -99,3 +99,10 @@ docs/design.md     the source design document
 scripts/demo.py    the week-6 demo
 tests/             firewall, policy, and scope-isolation tests
 ```
+
+## Other prototypes in this repo
+
+- [`claimiq_frontend/`](claimiq_frontend/) — ClaimIQ, an unrelated
+  click-through UI prototype for a Guidewire ClaimCenter-style claims
+  triage copilot built around a knowledge graph. Simulated data only;
+  see its own README for details.
